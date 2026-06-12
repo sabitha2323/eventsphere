@@ -1,0 +1,129 @@
+// firestore.rules
+// Copy and paste these rules in Firebase Console → Firestore → Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isHallOwner() {
+      return hasRole('owner');
+    }
+
+    // ==================== USERS ====================
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // ==================== HALLS ====================
+    match /halls/{hallId} {
+      // Anyone can read verified halls
+      allow read: if true;
+
+      // Hall owners can create halls
+      allow create: if isAuthenticated() && (isHallOwner() || isAdmin());
+
+      // Hall owners can update their own halls; admins can update any
+      allow update: if isAuthenticated() && (
+        (isHallOwner() && resource.data.ownerId == request.auth.uid) ||
+        isAdmin()
+      );
+
+      // Only admins can delete halls
+      allow delete: if isAdmin();
+    }
+
+    // ==================== BOOKINGS ====================
+    match /bookings/{bookingId} {
+      // Users can read their own bookings; hall owners can read bookings for their halls; admins can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin() ||
+        (isHallOwner() && exists(/databases/$(database)/documents/halls/$(resource.data.hallId)) &&
+         get(/databases/$(database)/documents/halls/$(resource.data.hallId)).data.ownerId == request.auth.uid)
+      );
+
+      // Authenticated users can create bookings
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Users can cancel their own bookings; owners and admins can update status
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin() ||
+        isHallOwner()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // ==================== MUHURTHAM DATES ====================
+    match /muhurtham_dates/{dateId} {
+      // Anyone can read muhurtham dates
+      allow read: if true;
+
+      // Only admins can write muhurtham dates
+      allow write: if isAdmin();
+    }
+
+    // ==================== VENDORS ====================
+    match /vendors/{vendorId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && (isHallOwner() || isAdmin());
+      allow update: if isAuthenticated() && (
+        resource.data.ownerId == request.auth.uid || isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ==================== REVIEWS ====================
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+    }
+
+    // ==================== NOTIFICATIONS ====================
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAdmin();
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // ==================== COMPLAINTS ====================
+    match /complaints/{complaintId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

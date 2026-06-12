@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "EventSphere",
+    "slug": "eventsphere",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "eventsphere",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.eventsphere.app",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "EventSphere uses the camera to let you upload event banner photos.",
+        "NSPhotoLibraryUsageDescription": "EventSphere accesses your photo library to let you select event banner images."
+      }
+    },
+    "android": {
+      "package": "com.eventsphere.app",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#7C3AED",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      }
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "android": {
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 120
+          },
+          "ios": {
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 120
+          }
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
