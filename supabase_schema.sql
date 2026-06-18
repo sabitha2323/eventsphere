@@ -395,3 +395,48 @@ values
   ('promo-3', 'TECH10', 10, true, 200, 80, 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f')
 on conflict (id) do nothing;
 
+-- 13. Chats Table
+create table public.chats (
+  id uuid default gen_random_uuid() primary key,
+  event_id uuid references public.events(id) on delete cascade not null,
+  user_id uuid references public.users(id) on delete cascade not null,
+  user_name text not null,
+  message text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.chats enable row level security;
+create policy "Allow anyone to read chats" on public.chats for select using (true);
+create policy "Allow authenticated users to insert chat messages" on public.chats for insert with check (auth.uid() = user_id);
+
+-- 14. FAQs Table
+create table public.faqs (
+  id uuid default gen_random_uuid() primary key,
+  event_id uuid references public.events(id) on delete cascade not null,
+  question text not null,
+  answer text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.faqs enable row level security;
+create policy "Allow anyone to view faqs" on public.faqs for select using (true);
+create policy "Allow admins and event creators to manage faqs" on public.faqs for all using (
+  exists (
+    select 1 from public.events
+    where events.id = faqs.event_id and (events.created_by = auth.uid() or exists (
+      select 1 from public.users where users.id = auth.uid() and users.role = 'admin'
+    ))
+  )
+);
+
+-- Seed FAQs Data
+insert into public.faqs (id, event_id, question, answer)
+values
+  ('faq-1', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'Is re-entry allowed?', 'Yes, with a valid wristband issued at checkout.'),
+  ('faq-2', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'Are outside food and drinks permitted?', 'No, but there are multiple food stalls inside the venue offering water, meals, and snacks.'),
+  ('faq-3', 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', 'What hardware should I bring?', 'Please bring your laptop, charger, and ID card. We will provide extension boxes, high-speed Wi-Fi, and meals.')
+on conflict (id) do nothing;
+
+
+
+
