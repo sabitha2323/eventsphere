@@ -1,0 +1,184 @@
+Test ID,Module,Screen / Feature,Test Case Description,Pre-Conditions,Test Steps,Expected Result,Actual Result,Status (Pass/Fail/Blocked),Priority,Tested By,Date Tested,Remarks
+,,,,,,,,,,,,
+TC-001,Authentication,Login Screen,Valid login with Admin credentials,App running in mock mode,"1. Open app
+2. Enter email: admin@eventsphere.com
+3. Enter password: password123
+4. Tap Sign In",Redirected to Explore (tabs) screen,,Not Tested,High,,,
+TC-002,Authentication,Login Screen,Valid login with User credentials,App running in mock mode,"1. Open app
+2. Enter email: user@eventsphere.com
+3. Enter password: password123
+4. Tap Sign In",Redirected to Explore (tabs) screen,,Not Tested,High,,,
+TC-003,Authentication,Login Screen,Invalid password shows error,App on login screen,"1. Enter email: user@eventsphere.com
+2. Enter password: wrongpass
+3. Tap Sign In",Alert shown: 'Invalid login credentials',,Not Tested,High,,,
+TC-004,Authentication,Login Screen,Empty fields validation,App on login screen,"1. Leave email and password blank
+2. Tap Sign In",Alert shown: 'Please fill in all fields.',,Not Tested,High,,,
+TC-005,Authentication,Login Screen,Show/Hide password toggle,App on login screen,"1. Enter any password
+2. Tap eye icon",Password visibility toggles between hidden and visible,,Not Tested,Medium,,,
+TC-006,Authentication,Login Screen,Forgot Password — valid email,App on login screen,"1. Enter email: user@eventsphere.com
+2. Tap 'Forgot Password?'",Alert: 'Reset Link Sent' — confirmation message shown,,Not Tested,Medium,,,
+TC-007,Authentication,Login Screen,Forgot Password — empty email,App on login screen,"1. Leave email blank
+2. Tap 'Forgot Password?'",Alert asking user to enter email first,,Not Tested,Medium,,,
+TC-008,Authentication,Login Screen,Navigate to Sign Up,App on login screen,"1. Tap 'Sign Up' link at bottom",Navigates to Signup screen,,Not Tested,Medium,,,
+TC-009,Authentication,Signup Screen,Register a new user,App on signup screen,"1. Enter name: Test User
+2. Enter email: testuser@example.com
+3. Enter phone: 9876543210
+4. Enter password: test1234
+5. Tap Sign Up",User created and redirected to Explore tab,,Not Tested,High,,,
+TC-010,Authentication,Signup Screen,Duplicate email registration,User already exists in DB,"1. Enter existing email: user@eventsphere.com
+2. Fill remaining fields
+3. Tap Sign Up",Alert: 'User already registered',,Not Tested,High,,,
+TC-011,Authentication,Signup Screen,Password mismatch validation,App on signup screen,"1. Enter password: pass1234
+2. Enter confirm password: pass5678
+3. Tap Sign Up",Alert or inline error shown for password mismatch,,Not Tested,High,,,
+TC-012,Authentication,Root Layout,Redirect unauthenticated user,No active session,"1. Clear session
+2. Open app",Auto-redirected to login screen,,Not Tested,High,,,
+TC-013,Authentication,Root Layout,Redirect authenticated user from login,Active session exists,"1. While logged in, navigate to /(auth)/login",Auto-redirected to Explore tab,,Not Tested,High,,,
+,,,,,,,,,,,,
+TC-014,Explore (Home),Home Screen,Events list loads,Logged in as any user,"1. Open Explore tab",Events list loads with at least 6 seed events displayed,,Not Tested,High,,,
+TC-015,Explore (Home),Home Screen,Featured Events carousel visible,Logged in — no search/filter active,"1. Open Explore tab with no search",Horizontal carousel with 3 featured events visible,,Not Tested,High,,,
+TC-016,Explore (Home),Home Screen,Search by title,Events loaded,"1. Type 'Neon' in search bar",Only 'Neon Beats Music Festival' shown,,Not Tested,High,,,
+TC-017,Explore (Home),Home Screen,Search by venue,Events loaded,"1. Type 'Chennai' in search bar",Events at Chennai venues shown,,Not Tested,Medium,,,
+TC-018,Explore (Home),Home Screen,Search by organizer,Events loaded,"1. Type 'TechPulse' in search bar",TechPulse 2026 Hackathon shown,,Not Tested,Medium,,,
+TC-019,Explore (Home),Home Screen,Category filter — select a category,Events loaded,"1. Tap 'Music' category chip",Only Music category events displayed,,Not Tested,High,,,
+TC-020,Explore (Home),Home Screen,Category filter — All resets filter,A category filter is active,"1. Tap 'All' category chip",All events displayed again,,Not Tested,High,,,
+TC-021,Explore (Home),Home Screen,No results for unknown search,"Events loaded","1. Type 'xyzabc' in search bar",Empty state shown: 'No events found matching your filter.',,Not Tested,Medium,,,
+TC-022,Explore (Home),Home Screen,Pull to refresh,Events loaded,"1. Pull down on the events list",Events refresh and reload,,Not Tested,Medium,,,
+TC-023,Explore (Home),Home Screen,Tap event card — navigates to detail,Events loaded,"1. Tap any event card",Event detail screen opens for that event,,Not Tested,High,,,
+TC-024,Explore (Home),Home Screen,Free event shows 'Free' label,Events loaded,"1. Look at Heritage & Roots Cultural Expo card",Price shown as 'Free' (not ₹0),,Not Tested,Medium,,,
+,,,,,,,,,,,,
+TC-025,Event Detail,Event Detail Screen,Event info displayed correctly,Navigate from home to any event,"1. Tap 'Neon Beats Music Festival'","Title, date, time, venue, organizer, price, description shown",,Not Tested,High,,,
+TC-026,Event Detail,Event Detail Screen,Ticket tiers displayed,Event has ticket tiers in DB,"1. Open Neon Beats event
+2. Scroll to Tickets section","General Admission (₹1499) and VIP Pass (₹2999) tiers visible",,Not Tested,High,,,
+TC-027,Event Detail,Event Detail Screen,Register / Buy Ticket button,Logged in user on event detail,"1. Tap 'Register' or 'Buy Ticket'",Navigates to checkout select-tickets screen,,Not Tested,High,,,
+TC-028,Event Detail,Event Detail Screen,FAQs displayed,Event has FAQs,"1. Open Neon Beats event
+2. Scroll to FAQ section","'Is re-entry allowed?' and answer shown",,Not Tested,Medium,,,
+TC-029,Event Detail,Event Detail Screen,Polls displayed and voteable,Event has polls,"1. Open Neon Beats event
+2. Scroll to Polls section
+3. Tap an option",Poll vote registers and percentage updates,,Not Tested,Medium,,,
+TC-030,Event Detail,Event Detail Screen,Reviews section visible,Event has reviews,"1. Open Neon Beats event
+2. Scroll to Reviews","Star rating + comment from 'Regular User' and 'Admin User' visible",,Not Tested,Medium,,,
+TC-031,Event Detail,Event Detail Screen,Submit a new review,Logged in user,"1. Open any event
+2. Enter comment and select rating
+3. Tap Submit",New review appears in review list,,Not Tested,Medium,,,
+TC-032,Event Detail,Event Detail Screen,Share event / Save event,Logged in user,"1. Tap Save/Bookmark icon on event detail",Event saved to Saved Events list,,Not Tested,Low,,,
+,,,,,,,,,,,,
+TC-033,Checkout,Select Tickets,Ticket quantity increment/decrement,On select-tickets screen,"1. Tap + to increase ticket count
+2. Tap - to decrease","Count updates correctly, cannot go below 0",,Not Tested,High,,,
+TC-034,Checkout,Select Tickets,Apply valid promo code,On select-tickets screen,"1. Enter promo code: EARLYBIRD
+2. Tap Apply","20% discount applied to total",,Not Tested,High,,,
+TC-035,Checkout,Select Tickets,Apply invalid promo code,On select-tickets screen,"1. Enter promo code: INVALID123
+2. Tap Apply",Error shown: invalid or expired promo code,,Not Tested,High,,,
+TC-036,Checkout,Select Tickets,Apply event-specific promo code,On Neon Beats checkout,"1. Enter promo code: NEON25
+2. Tap Apply",25% discount applied,,Not Tested,Medium,,,
+TC-037,Checkout,Select Tickets,Total price calculated correctly,Select 2 General Admission tickets (₹1499 each),"1. Select 2 × General Admission
+2. Check total",Total shows ₹2998,,Not Tested,High,,,
+TC-038,Checkout,Select Tickets,Proceed to billing details,Tickets selected,"1. Tap Continue / Proceed",Navigates to billing-details screen,,Not Tested,High,,,
+TC-039,Checkout,Billing Details,Required fields validation,On billing-details screen,"1. Leave name empty
+2. Tap Continue",Validation error shown,,Not Tested,High,,,
+TC-040,Checkout,Billing Details,Proceed to payment method,All billing fields filled,"1. Fill Name, Phone, Address
+2. Tap Continue",Navigates to payment-method screen,,Not Tested,High,,,
+TC-041,Checkout,Payment Method,Select Card payment,On payment-method screen,"1. Select Card option
+2. Tap Continue",Navigates to card-input screen,,Not Tested,High,,,
+TC-042,Checkout,Payment Method,Select UPI payment,On payment-method screen,"1. Select UPI option
+2. Tap Continue",Navigates to upi-sim screen,,Not Tested,High,,,
+TC-043,Checkout,Card Input,Valid card details submission,"On card-input screen","1. Enter card: 4111 1111 1111 1111
+2. Expiry: 12/26, CVV: 123
+3. Tap Pay",Payment success screen / confirmation shown,,Not Tested,High,,,
+TC-044,Checkout,Card Input,Invalid card number,On card-input screen,"1. Enter card: 1234
+2. Tap Pay",Validation error for invalid card number,,Not Tested,High,,,
+TC-045,Checkout,UPI Simulator,UPI payment simulation,On upi-sim screen,"1. Enter UPI ID: test@upi
+2. Tap Pay",Simulated payment success shown,,Not Tested,High,,,
+TC-046,Checkout,Order Confirmation,Registration record created after payment,Complete checkout flow,"1. Complete full checkout
+2. Open Profile > My Events",Purchased event appears in registered events list,,Not Tested,High,,,
+,,,,,,,,,,,,
+TC-047,Create Event,Create Screen,All form fields visible,Logged in as any user,"1. Open Create tab","Title, description, date, time, venue, category, price, image fields visible",,Not Tested,High,,,
+TC-048,Create Event,Create Screen,Submit valid event,All fields filled,"1. Fill all required fields
+2. Tap Submit / Create","Event created with is_approved=false, pending admin approval",,Not Tested,High,,,
+TC-049,Create Event,Create Screen,Required field validation,Some fields empty,"1. Leave title empty
+2. Tap Submit",Validation error for missing title,,Not Tested,High,,,
+TC-050,Create Event,Create Screen,Category dropdown,On create screen,"1. Tap category selector
+2. Choose 'Technology'",Category set to Technology,,Not Tested,Medium,,,
+TC-051,Create Event,Create Screen,Free event (price = 0),On create screen,"1. Set ticket price to 0
+2. Submit",Event created with ticket_price = 0,,Not Tested,Medium,,,
+,,,,,,,,,,,,
+TC-052,Profile / Dashboard,Dashboard Screen,User profile information shown,Logged in,"1. Open Profile tab",Name, email shown for logged-in user,,Not Tested,High,,,
+TC-053,Profile / Dashboard,Dashboard Screen,Registered events list,User has registrations,"1. Open Profile tab
+2. View My Events section",All registered events listed,,Not Tested,High,,,
+TC-054,Profile / Dashboard,Dashboard Screen,Notifications visible,User has notifications,"1. Open Profile tab
+2. View Notifications","Notification title, message, read/unread state shown",,Not Tested,Medium,,,
+TC-055,Profile / Dashboard,Dashboard Screen,Sign out,Logged in,"1. Tap Sign Out button",Session cleared — redirected to login screen,,Not Tested,High,,,
+TC-056,Profile / Dashboard,Dashboard Screen,Organizer Dashboard link,Logged-in user who created events,"1. Tap 'Manage My Events' or organizer section",Navigates to /organizer/dashboard,,Not Tested,High,,,
+,,,,,,,,,,,,
+TC-057,Organizer,Organizer Dashboard,My events listed,User has created events,"1. Navigate to /organizer/dashboard",Created events list with status shown (approved/pending),,Not Tested,High,,,
+TC-058,Organizer,Analytics,Revenue chart loads,Organizer has events with sales,"1. Navigate to /organizer/analytics",Revenue and attendance data displayed in charts,,Not Tested,Medium,,,
+TC-059,Organizer,Attendees,Attendee list for event,Event has registrations,"1. Navigate to /organizer/attendees-[id]",List of registered attendees shown,,Not Tested,High,,,
+TC-060,Organizer,Check-In,Check-in attendee,Attendee list available,"1. Navigate to /organizer/checkin-[id]
+2. Tap check-in next to an attendee",Attendee marked as checked in,,Not Tested,High,,,
+TC-061,Organizer,Edit Event,Edit event details,Organizer owns event,"1. Navigate to /organizer/edit-[id]
+2. Change title
+3. Tap Save",Event updated in database,,Not Tested,High,,,
+TC-062,Organizer,Email Broadcast,Send email to attendees,Event has attendees,"1. Navigate to /organizer/email-broadcast-[id]
+2. Enter subject and body
+3. Tap Send",Email broadcast sent (or simulated in mock mode),,Not Tested,Medium,,,
+TC-063,Organizer,Promo Codes,Create new promo code,On /organizer/promocodes,"1. Tap Create
+2. Enter code, discount %, limit
+3. Save","New promo code created, visible in list",,Not Tested,Medium,,,
+TC-064,Organizer,Promo Codes,Disable promo code,Active promo code exists,"1. Tap disable/toggle on active code",Code marked inactive,,Not Tested,Medium,,,
+TC-065,Organizer,Ticket Types,Add ticket tier,On /organizer/ticket-types-[id],"1. Tap Add Tier
+2. Enter name, price, quantity
+3. Save",New ticket tier appears on event detail,,Not Tested,High,,,
+TC-066,Organizer,Payouts,Payout history shown,Organizer has sales,"1. Navigate to /organizer/payouts",Earnings history and payout amounts displayed,,Not Tested,Medium,,,
+TC-067,Organizer,Collaborators,Add collaborator,On /organizer/collaborators-[id],"1. Enter collaborator email/name
+2. Tap Add",Collaborator added to event,,Not Tested,Low,,,
+,,,,,,,,,,,,
+TC-068,Admin Panel,Admin Screen,Access restricted for regular user,Logged in as regular user,"1. Open Admin tab",Access denied message shown / redirected,,Not Tested,High,,,
+TC-069,Admin Panel,Admin Screen,Admin can access panel,Logged in as admin@eventsphere.com,"1. Open Admin tab",Admin panel with pending events and controls visible,,Not Tested,High,,,
+TC-070,Admin Panel,Event Approval,Pending events listed,A user has submitted an event,"1. Navigate to Admin tab
+2. View Pending Events section",User-submitted unapproved events listed,,Not Tested,High,,,
+TC-071,Admin Panel,Event Approval,Approve an event,Pending event in list,"1. Tap Approve on a pending event","Event is_approved set to true, appears on home screen",,Not Tested,High,,,
+TC-072,Admin Panel,Event Approval,Reject/Delete an event,Pending event in list,"1. Tap Reject/Delete on a pending event",Event removed from pending list,,Not Tested,High,,,
+TC-073,Admin Panel,Support Tickets,Support ticket thread visible,Support ticket exists in DB,"1. Navigate to Admin > Support Tickets",Ticket with user messages and admin response visible,,Not Tested,Medium,,,
+TC-074,Admin Panel,Support Tickets,Admin reply to support ticket,On support ticket thread,"1. Type a reply
+2. Tap Send",Reply added to ticket thread,,Not Tested,Medium,,,
+TC-075,Admin Panel,Audit Logs,Audit log entries displayed,Admin logged in,"1. Navigate to Admin > Audit Logs","'Approved event: ...' log entries shown with admin name, IP, timestamp",,Not Tested,Low,,,
+TC-076,Admin Panel,User Management,All users listed,Admin logged in,"1. Navigate to Admin > Users",List of all registered users with roles shown,,Not Tested,Medium,,,
+,,,,,,,,,,,,
+TC-077,Search & Discovery,Trending,Trending events list,Events in DB,"1. Navigate to /search/trending",Events sorted by popularity/registrations,,Not Tested,Medium,,,
+TC-078,Search & Discovery,Calendar View,Calendar loads with events,Events in DB,"1. Navigate to /search/calendar",Calendar shown with event indicators on dates,,Not Tested,Medium,,,
+TC-079,Search & Discovery,Calendar View,Tap date shows events,Events on that date,"1. Tap a date with events on calendar",Events for that date listed below,,Not Tested,Medium,,,
+TC-080,Search & Discovery,Categories,Category grid displayed,On /search/categories,"1. Navigate to /search/categories",All categories shown as grid of cards,,Not Tested,Low,,,
+TC-081,Search & Discovery,Category Filter,Events filtered by category,On /search/category-[cat],"1. Navigate to /search/category-Music",Only Music events shown,,Not Tested,Medium,,,
+TC-082,Search & Discovery,Free Events,Free events listed,Events with price=0,"1. Navigate to /search/free-events",Heritage & Roots Cultural Expo and other free events shown,,Not Tested,Medium,,,
+TC-083,Search & Discovery,Saved Events,Saved events shown,User has saved events,"1. Navigate to /search/saved-events",Bookmarked events listed,,Not Tested,Medium,,,
+TC-084,Search & Discovery,Nearby Events,Location prompt / nearby events,On /search/nearby,"1. Navigate to /search/nearby
+2. Allow location (if prompted)",Events near user's location shown,,Not Tested,Medium,,,
+TC-085,Search & Discovery,Map View,Map loads with event pins,On /search/map,"1. Navigate to /search/map",Map displayed with event location pins,,Not Tested,Low,,,
+TC-086,Search & Discovery,Filters,Filter by price range,On /search/filters,"1. Set min price: 0, max price: 200
+2. Apply",Only events with ticket_price ≤ 200 shown,,Not Tested,Medium,,,
+TC-087,Search & Discovery,Filters,Filter by date range,On /search/filters,"1. Set start date and end date
+2. Apply",Only events within date range shown,,Not Tested,Medium,,,
+TC-088,Search & Discovery,Online Events,Online events listed,Events marked as online,"1. Navigate to /search/online-events",Virtual/online events shown,,Not Tested,Low,,,
+,,,,,,,,,,,,
+TC-089,Mock DB,Offline Demo Mode,App works without Supabase credentials,.env has placeholder values,"1. Ensure .env has 'your-project-id'
+2. Launch app
+3. Log in with mock credentials",App works fully with seed data — no crash,,Not Tested,High,,,
+TC-090,Mock DB,Offline Demo Mode,Mock session persists across restart,Logged in with mock credentials,"1. Log in
+2. Close and reopen app",User remains logged in (session stored in SecureStore/localStorage),,Not Tested,High,,,
+TC-091,Mock DB,Offline Demo Mode,New registration saved to mock DB,Logged in user,"1. Register for an event
+2. Close and reopen app
+3. Check Profile > My Events",Registration persists after app restart,,Not Tested,Medium,,,
+,,,,,,,,,,,,
+TC-092,Cross-Platform,Web,App renders on web browser,Running npm run web,"1. Open browser at localhost
+2. Navigate through screens",All screens render correctly on web,,Not Tested,High,,,
+TC-093,Cross-Platform,Web,Glassmorphism blur effect on web,Web browser,"1. Open login or home screen",Blur/glass effect visible on GlassView components (CSS filter),,Not Tested,Medium,,,
+TC-094,Cross-Platform,Web,Max-width layout constraint on web,Web browser,"1. Open Explore tab on wide screen",Content constrained to 800px max-width and centered,,Not Tested,Low,,,
+TC-095,Cross-Platform,Web,Tab bar floating on web,Web browser,"1. Open any tab",Bottom tab bar appears floating with rounded corners,,Not Tested,Low,,,
+TC-096,Cross-Platform,Android,Tab bar height correct on Android,Android device/emulator,"1. Open any tab",Tab bar 64px height with correct bottom padding,,Not Tested,Medium,,,
+TC-097,Cross-Platform,iOS,Tab bar height correct on iOS (safe area),iOS device/simulator,"1. Open any tab",Tab bar 88px height with 30px bottom padding for home indicator,,Not Tested,Medium,,,
+TC-098,Cross-Platform,iOS,KeyboardAvoidingView on login,iOS device,"1. Open login screen
+2. Tap email input",Screen adjusts to avoid keyboard obscuring form,,Not Tested,Medium,,,
+,,,,,,,,,,,,
+TC-099,Performance,Image Loading,Expo Image caching,Any screen with images,"1. Load events list
+2. Scroll down and back up",Images load quickly from memory-disk cache,,Not Tested,Low,,,
+TC-100,Performance,Home Screen,Large event list performance,DB with 50+ events,"1. Scroll through long events list",No jank / FlatList renders smoothly,,Not Tested,Low,,,

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import { Image } from 'expo-image';
 
 const LOCATIONS = ['All', 'Chennai', 'Bengaluru', 'Mumbai', 'Online'];
 const PRICES = ['All', 'Free', 'Under ₹500', '₹500 - ₹1500', '₹1500+'];
-const CATEGORIES = ['All', 'Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops'];
+const CATEGORIES = ['All', 'Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops', 'Seminar', 'Hackathon'];
 const SORTS = ['Date (Soonest)', 'Price (Low to High)', 'Price (High to Low)'];
 
 export default function FiltersScreen() {

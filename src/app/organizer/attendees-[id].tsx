@@ -113,7 +113,7 @@ export default function AttendeesListScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/organizer/dashboard')} style={styles.backBtn}>
           <AppIcon name="chevron.left" size={20} tintColor={Theme.colors.text} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>

@@ -42,6 +42,8 @@ export const Theme = {
       Technology: '#8B5CF6',
       'Food Festival': '#EF4444',
       Workshops: '#06B6D4',
+      Seminar: '#F59E0B',
+      Hackathon: '#8B5CF6',
     },
   },
 
@@ -52,10 +54,15 @@ export const Theme = {
       medium: 'sans-serif-medium',
       bold: 'sans-serif-bold',
     },
+    web: {
+      regular: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      medium: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      bold: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    },
     default: {
       regular: 'sans-serif',
-      medium: 'sans-serif-medium',
-      bold: 'sans-serif-bold',
+      medium: 'sans-serif',
+      bold: 'sans-serif',
     },
   }),
 

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,8 @@ const CATEGORIES = [
   'Technology',
   'Food Festival',
   'Workshops',
+  'Seminar',
+  'Hackathon',
 ];
 
 export default function CreateEventScreen() {

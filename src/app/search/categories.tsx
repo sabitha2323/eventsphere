@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,8 @@ const CATEGORY_DETAILS = [
   { name: 'Technology', description: 'Hackathons, coding challenges, tech talks, and tech exhibitions.', icon: 'cpu', color: '#8B5CF6' },
   { name: 'Food Festival', description: 'Culinary tours, street food truck stalls, and chef masterclasses.', icon: 'fork.knife', color: '#EF4444' },
   { name: 'Workshops', description: 'Interactive learning panels, writing groups, and seminars.', icon: 'hammer.fill', color: '#06B6D4' },
+  { name: 'Seminar', description: 'Interactive learning panels, writing groups, and academic seminars.', icon: 'person.2.fill', color: '#F59E0B' },
+  { name: 'Hackathon', description: 'Join software hackathons, hardware prototyping, and coding challenges.', icon: 'cpu', color: '#8B5CF6' },
 ];
 
 export default function CategoriesDirectoryScreen() {
@@ -53,7 +55,7 @@ export default function CategoriesDirectoryScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backBtn}>
           <AppIcon name="chevron.left" size={20} tintColor={Theme.colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Categories Directory</Text>
@@ -71,7 +73,7 @@ export default function CategoriesDirectoryScreen() {
             return (
               <TouchableOpacity
                 key={cat.name}
-                onPress={() => router.push(`/search/category-${cat.name.toLowerCase()}` as any)}
+                onPress={() => router.push(`/search/category/${cat.name.toLowerCase()}` as any)}
                 style={styles.cardWrapper}
               >
                 <GlassView style={[styles.card, { borderColor: cat.color + '22' }]} intensity="low">

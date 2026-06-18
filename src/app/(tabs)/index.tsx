@@ -1,23 +1,22 @@
-﻿import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-  RefreshControl,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import { AppIcon } from '@/components/AppIcon';
+import { GlassView } from '@/components/GlassView';
+import { Theme } from '@/constants/theme';
+import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { supabase } from '@/lib/supabase';
-import { Theme } from '@/constants/theme';
-import { GlassView } from '@/components/GlassView';
-import { AppIcon } from '@/components/AppIcon';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Platform,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -30,6 +29,8 @@ const CATEGORIES = [
   'Technology',
   'Food Festival',
   'Workshops',
+  'Seminar',
+  'Hackathon',
 ];
 
 interface Event {

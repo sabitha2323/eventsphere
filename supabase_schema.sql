@@ -32,7 +32,7 @@ create table public.events (
   id uuid default gen_random_uuid() primary key,
   title text not null,
   description text,
-  category text not null check (category in ('Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops')),
+  category text not null check (category in ('Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops', 'Seminar', 'Hackathon')),
   date date not null,
   time text not null,
   venue text not null,
@@ -270,5 +270,44 @@ values
     'Literary Society',
     'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=600',
     500.00,
+    true
+  ),
+  (
+    'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v',
+    'Campus Spark Inter-College Fest',
+    'The ultimate annual inter-collegiate fest showcasing talent across music, dance, dramatics, and fine arts. Battle it out with colleges from across the region to win cash prizes!',
+    'College',
+    current_date + interval '14 days',
+    '09:00 - 18:00',
+    'Main Campus Quadrangle, Chennai',
+    'Student Council Association',
+    'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=600',
+    150.00,
+    true
+  ),
+  (
+    'h8i9j0k1-l2m3-4n5o-6p7q-8r9s0t1u2v3w',
+    'Global AI & Sustainability Summit',
+    'A premium seminar featuring guest lectures from leading AI researchers and sustainability experts. Explore how machine learning is tackling climate change, clean energy, and resource conservation.',
+    'Seminar',
+    current_date + interval '20 days',
+    '10:00 - 16:30',
+    'Tech Conference Center Hall A, Bengaluru',
+    'EcoTech Alliance',
+    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600',
+    0.00,
+    true
+  ),
+  (
+    'i9j0k1l2-m3n4-5o6p-7q8r-9s0t1u2v3w4x',
+    'Fintech Frontiers Hackathon 2026',
+    'A high-stakes 48-hour coding hackathon to build the next generation of decentralized finance, micro-lending, and secure payment solutions. Win mentorship, funding, and career opportunities.',
+    'Hackathon',
+    current_date + interval '30 days',
+    '18:00 (Fri) - 18:00 (Sun)',
+    'Innovation Sandbox Hub, Mumbai',
+    'Future Finance Labs',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600',
+    300.00,
     true
   );

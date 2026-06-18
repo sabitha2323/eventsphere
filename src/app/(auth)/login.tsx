@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -24,26 +24,43 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Web-safe alert helper — Alert.alert is a no-op on web in some Expo versions
+  const showAlert = (title: string, message: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.alert(`${title}\n\n${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields.');
+      showAlert('Error', 'Please fill in all fields.');
       return;
     }
 
     setLoading(true);
     try {
+      console.log('[Login] Attempting sign-in for:', email.trim());
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
 
       if (error) {
-        Alert.alert('Authentication Failed', error.message);
+        console.error('[Login] Auth error:', error.message);
+        showAlert('Authentication Failed', error.message);
+      } else if (data?.session) {
+        console.log('[Login] Success — session obtained, redirecting...');
+        // Explicitly navigate to tabs on success
+        router.replace('/(tabs)');
       } else {
-        // Successful login - Root layout will automatically redirect to (tabs)
+        console.warn('[Login] Sign-in returned no error but also no session.');
+        showAlert('Login Issue', 'Sign-in succeeded but no session was returned. Please try again.');
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'An unexpected error occurred.');
+      console.error('[Login] Unexpected error:', err);
+      showAlert('Error', err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -51,7 +68,7 @@ export default function LoginScreen() {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      Alert.alert(
+      showAlert(
         'Email Required',
         'Please enter your email address in the email field first, then tap Forgot Password.'
       );
@@ -75,15 +92,15 @@ export default function LoginScreen() {
       });
 
       if (error) {
-        Alert.alert('Error', error.message);
+        showAlert('Error', error.message);
       } else {
-        Alert.alert(
+        showAlert(
           'Reset Link Sent',
           'A password reset link has been sent to your email.'
         );
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'An unexpected error occurred.');
+      showAlert('Error', err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }

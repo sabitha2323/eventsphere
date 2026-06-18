@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -63,7 +63,7 @@ export default function AnalyticsScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/organizer/dashboard')} style={styles.backBtn}>
           <AppIcon name="chevron.left" size={20} tintColor={Theme.colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Analytics Dashboard</Text>

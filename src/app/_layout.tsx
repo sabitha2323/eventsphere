@@ -39,7 +39,7 @@ export default function RootLayout() {
       // Redirect to home if signed in and trying to access login/signup
       router.replace('/(tabs)');
     }
-  }, [session, segments, loading]);
+  }, [session, segments, loading, router]);
 
   if (loading) {
     return (

@@ -162,6 +162,48 @@ const seedEvents = [
     is_approved: true,
     created_by: null,
   },
+  {
+    id: 'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v',
+    title: 'Campus Spark Inter-College Fest',
+    description: 'The ultimate annual inter-collegiate fest showcasing talent across music, dance, dramatics, and fine arts. Battle it out with colleges from across the region to win cash prizes!',
+    category: 'College',
+    date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    time: '09:00 - 18:00',
+    venue: 'Main Campus Quadrangle, Chennai',
+    organizer: 'Student Council Association',
+    image_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=600',
+    ticket_price: 150.00,
+    is_approved: true,
+    created_by: null,
+  },
+  {
+    id: 'h8i9j0k1-l2m3-4n5o-6p7q-8r9s0t1u2v3w',
+    title: 'Global AI & Sustainability Summit',
+    description: 'A premium seminar featuring guest lectures from leading AI researchers and sustainability experts. Explore how machine learning is tackling climate change, clean energy, and resource conservation.',
+    category: 'Seminar',
+    date: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    time: '10:00 - 16:30',
+    venue: 'Tech Conference Center Hall A, Bengaluru',
+    organizer: 'EcoTech Alliance',
+    image_url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600',
+    ticket_price: 0.00,
+    is_approved: true,
+    created_by: null,
+  },
+  {
+    id: 'i9j0k1l2-m3n4-5o6p-7q8r-9s0t1u2v3w4x',
+    title: 'Fintech Frontiers Hackathon 2026',
+    description: 'A high-stakes 48-hour coding hackathon to build the next generation of decentralized finance, micro-lending, and secure payment solutions. Win mentorship, funding, and career opportunities.',
+    category: 'Hackathon',
+    date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    time: '18:00 (Fri) - 18:00 (Sun)',
+    venue: 'Innovation Sandbox Hub, Mumbai',
+    organizer: 'Future Finance Labs',
+    image_url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600',
+    ticket_price: 300.00,
+    is_approved: true,
+    created_by: null,
+  },
 ];
 
 // Seed Ticket Tiers
@@ -173,6 +215,10 @@ const seedTicketTiers = [
   { id: 'tier-5', event_id: 'd4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a', name: 'Participant Entry', price: 100.00, quantity: 1000, sold: 420 },
   { id: 'tier-6', event_id: 'e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b', name: 'Standard Pass', price: 150.00, quantity: 800, sold: 320 },
   { id: 'tier-7', event_id: 'f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c', name: 'General Entry', price: 500.00, quantity: 50, sold: 18 },
+  { id: 'tier-8', event_id: 'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v', name: 'General Entry', price: 150.00, quantity: 1000, sold: 50 },
+  { id: 'tier-9', event_id: 'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v', name: 'VIP Pass', price: 400.00, quantity: 100, sold: 10 },
+  { id: 'tier-10', event_id: 'h8i9j0k1-l2m3-4n5o-6p7q-8r9s0t1u2v3w', name: 'Free Registration', price: 0.00, quantity: 500, sold: 220 },
+  { id: 'tier-11', event_id: 'i9j0k1l2-m3n4-5o6p-7q8r-9s0t1u2v3w4x', name: 'Team Entry', price: 300.00, quantity: 150, sold: 80 },
 ];
 
 // Seed Promo Codes
@@ -231,13 +277,31 @@ async function getMockDb(): Promise<any> {
     const data = await ExpoSecureStoreAdapter.getItem('eventsphere_mock_db');
     if (data) {
       mockDbInMemory = JSON.parse(data);
-      // Verify all tables exist
-      if (!mockDbInMemory.users) mockDbInMemory.users = seedUsers;
-      if (!mockDbInMemory.events) mockDbInMemory.events = seedEvents;
+      // Verify all tables exist and merge new seed data
+      if (!mockDbInMemory.users) {
+        mockDbInMemory.users = seedUsers;
+      }
+      if (!mockDbInMemory.events) {
+        mockDbInMemory.events = seedEvents;
+      } else {
+        seedEvents.forEach(se => {
+          if (!mockDbInMemory.events.some((e: any) => e.id === se.id)) {
+            mockDbInMemory.events.push(se);
+          }
+        });
+      }
       if (!mockDbInMemory.registrations) mockDbInMemory.registrations = [];
       if (!mockDbInMemory.comments) mockDbInMemory.comments = [];
       if (!mockDbInMemory.notifications) mockDbInMemory.notifications = [];
-      if (!mockDbInMemory.ticket_tiers) mockDbInMemory.ticket_tiers = seedTicketTiers;
+      if (!mockDbInMemory.ticket_tiers) {
+        mockDbInMemory.ticket_tiers = seedTicketTiers;
+      } else {
+        seedTicketTiers.forEach(st => {
+          if (!mockDbInMemory.ticket_tiers.some((t: any) => t.id === st.id)) {
+            mockDbInMemory.ticket_tiers.push(st);
+          }
+        });
+      }
       if (!mockDbInMemory.promocodes) mockDbInMemory.promocodes = seedPromoCodes;
       if (!mockDbInMemory.billing_records) mockDbInMemory.billing_records = [];
       if (!mockDbInMemory.chats) mockDbInMemory.chats = [];
@@ -246,6 +310,8 @@ async function getMockDb(): Promise<any> {
       if (!mockDbInMemory.reviews) mockDbInMemory.reviews = seedReviews;
       if (!mockDbInMemory.support_tickets) mockDbInMemory.support_tickets = seedSupportTickets;
       if (!mockDbInMemory.audit_logs) mockDbInMemory.audit_logs = seedAuditLogs;
+      
+      await saveMockDb(mockDbInMemory);
       return mockDbInMemory;
     }
   } catch (e) {
@@ -331,9 +397,12 @@ class MockQueryBuilder {
   private orderField?: string;
   private orderAscending?: boolean;
   private isSingle = false;
+  private isMaybeSingle = false;
   private isCount = false;
-  private operation?: 'insert' | 'update' | 'delete';
+  private operation?: 'insert' | 'update' | 'delete' | 'upsert';
   private operationData?: any;
+  // For chained insert().select().single() patterns
+  private postInsertSelect = false;
 
   constructor(tableName: string) {
     this.tableName = tableName;
@@ -342,6 +411,10 @@ class MockQueryBuilder {
   select(fields?: string, options?: { count?: string; head?: boolean }) {
     if (options?.count || (fields && fields.includes('count'))) {
       this.isCount = true;
+    }
+    // If called after insert/upsert, mark a post-insert select
+    if (this.operation === 'insert' || this.operation === 'upsert') {
+      this.postInsertSelect = true;
     }
     return this;
   }
@@ -364,8 +437,27 @@ class MockQueryBuilder {
     return this;
   }
 
+  /**
+   * maybeSingle — like single() but returns null (not an error) when no row matches.
+   * FIXED: was missing, causing runtime crashes on event detail screen.
+   */
+  maybeSingle() {
+    this.isMaybeSingle = true;
+    return this;
+  }
+
   insert(rowOrRows: any) {
     this.operation = 'insert';
+    this.operationData = rowOrRows;
+    return this;
+  }
+
+  /**
+   * upsert — insert or update on conflict.
+   * FIXED: was missing, causing runtime crashes on signup flow.
+   */
+  upsert(rowOrRows: any) {
+    this.operation = 'upsert';
     this.operationData = rowOrRows;
     return this;
   }
@@ -398,9 +490,33 @@ class MockQueryBuilder {
         created_at: new Date().toISOString(),
         ...row,
       }));
+      if (!db[this.tableName]) db[this.tableName] = [];
       db[this.tableName].push(...newRows);
       await saveMockDb(db);
       data = newRows;
+    } else if (this.operation === 'upsert') {
+      // FIXED: upsert support — insert or update by id
+      const rowOrRows = this.operationData;
+      const rows = Array.isArray(rowOrRows) ? rowOrRows : [rowOrRows];
+      if (!db[this.tableName]) db[this.tableName] = [];
+      const upsertedRows: any[] = [];
+      for (const row of rows) {
+        const existingIdx = db[this.tableName].findIndex((item: any) => item.id === row.id);
+        if (existingIdx >= 0) {
+          db[this.tableName][existingIdx] = { ...db[this.tableName][existingIdx], ...row };
+          upsertedRows.push(db[this.tableName][existingIdx]);
+        } else {
+          const newRow = {
+            id: row.id || Math.random().toString(36).substring(2, 15),
+            created_at: new Date().toISOString(),
+            ...row,
+          };
+          db[this.tableName].push(newRow);
+          upsertedRows.push(newRow);
+        }
+      }
+      await saveMockDb(db);
+      data = upsertedRows;
     } else if (this.operation === 'update') {
       const updateData = this.operationData;
       let updatedCount = 0;
@@ -477,11 +593,14 @@ class MockQueryBuilder {
     if (this.tableName === 'comments') {
       data = data.map((comment) => {
         const user = db.users.find((u: any) => u.id === comment.user_id);
+        const userObj = user
+          ? { name: user.name, email: user.email }
+          : { name: 'Demo User', email: 'demo@eventsphere.com' };
         return {
           ...comment,
-          user: user
-            ? { name: user.name, email: user.email }
-            : { name: 'Demo User', email: 'demo@eventsphere.com' },
+          // Provide both `user` (old) and `users` (new, used in event detail screen)
+          user: userObj,
+          users: userObj,
         };
       });
     }
@@ -490,11 +609,42 @@ class MockQueryBuilder {
       return { count: data.length, data: null, error: null };
     }
 
+    // FIXED: maybeSingle returns null (not an error) when no row is found
+    if (this.isMaybeSingle) {
+      return { data: data[0] || null, error: null };
+    }
+
     if (this.isSingle) {
+      // For insert().select().single() chains, data is already the inserted rows
+      if (this.postInsertSelect && data.length > 0) {
+        // Resolve joins for the single returned row if needed
+        const resolved = this._resolveJoins(db, data);
+        return { data: resolved[0] || null, error: null };
+      }
       return { data: data[0] || null, error: data[0] ? null : { message: 'Row not found' } };
     }
 
     return { data, error: null };
+  }
+
+  private _resolveJoins(db: any, data: any[]): any[] {
+    if (this.tableName === 'registrations') {
+      return data.map((reg) => {
+        const event = db.events?.find((e: any) => e.id === reg.event_id);
+        return { ...reg, events: event || null };
+      });
+    }
+    if (this.tableName === 'comments') {
+      return data.map((comment) => {
+        const user = db.users?.find((u: any) => u.id === comment.user_id);
+        return {
+          ...comment,
+          users: user ? { name: user.name, email: user.email } : { name: 'Demo User', email: 'demo@eventsphere.com' },
+          user: user ? { name: user.name, email: user.email } : { name: 'Demo User', email: 'demo@eventsphere.com' },
+        };
+      });
+    }
+    return data;
   }
 }
 

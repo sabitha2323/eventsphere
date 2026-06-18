@@ -335,7 +335,7 @@ export default function EventDetailsScreen() {
             transition={400}
           />
           {/* Back button */}
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.canGoBack() ? router.back() : router.replace('/')}>
             <AppIcon name="chevron.left" size={24} tintColor={Theme.colors.white} />
           </TouchableOpacity>
 

@@ -16,7 +16,7 @@ import { Theme } from '@/constants/theme';
 import { GlassView } from '@/components/GlassView';
 import { AppIcon } from '@/components/AppIcon';
 
-const CATEGORIES = ['Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops'];
+const CATEGORIES = ['Music', 'Cultural', 'College', 'Sports', 'Technology', 'Food Festival', 'Workshops', 'Seminar', 'Hackathon'];
 
 export default function EditEventScreen() {
   const router = useRouter();

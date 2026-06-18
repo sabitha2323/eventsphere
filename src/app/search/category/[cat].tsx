@@ -23,15 +23,17 @@ const CATEGORY_META: any = {
   technology: { title: 'Tech Talks & Hackathons', desc: 'Join hackathons, AI workshops, developer meetups, and gadgets expos.', icon: 'cpu', color: '#8B5CF6', cover: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800' },
   'food festival': { title: 'Food & Gourmet Festivals', desc: 'Indulge in street food crawls, gourmet trucks, baking and culinary expos.', icon: 'fork.knife', color: '#EF4444', cover: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=800' },
   workshops: { title: 'Interactive Learning Workshops', desc: 'Hone your writing, arts, business skills, or design methodologies.', icon: 'hammer.fill', color: '#06B6D4', cover: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=800' },
+  seminar: { title: 'Seminars & Academic Talks', desc: 'Engage with guest lectures, academic discussions, panels, and presentations.', icon: 'person.2.fill', color: '#F59E0B', cover: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800' },
+  hackathon: { title: 'Hackathons & Coding Challenges', desc: 'Collaborate with teams to build software and hardware prototypes under time constraints.', icon: 'cpu', color: '#8B5CF6', cover: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800' },
 };
 
 export default function CategoryScreen() {
   const router = useRouter();
   const { cat } = useLocalSearchParams();
-  const categoryKey = String(cat || '').toLowerCase();
+  const categoryKey = decodeURIComponent(String(cat || '')).toLowerCase();
   
   const meta = CATEGORY_META[categoryKey] || {
-    title: String(cat || 'Category'),
+    title: decodeURIComponent(String(cat || 'Category')),
     desc: 'Explore upcoming community events in this category.',
     icon: 'calendar',
     color: Theme.colors.primary,
@@ -81,7 +83,7 @@ export default function CategoryScreen() {
         <View style={styles.coverWrapper}>
           <Image source={{ uri: meta.cover }} style={styles.coverImage} contentFit="cover" />
           <View style={styles.overlay} />
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/search/categories')} style={styles.backBtn}>
             <AppIcon name="chevron.left" size={20} tintColor="#fff" />
           </TouchableOpacity>
           <View style={styles.metaContainer}>

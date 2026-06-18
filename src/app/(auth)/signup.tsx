@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -28,33 +28,45 @@ export default function SignupScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
+  // Web-safe alert helper — Alert.alert is a no-op on web in some Expo versions
+  const showAlert = (title: string, message: string, buttons?: any[]) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.alert(`${title}\n\n${message}`);
+      // Execute the first button's onPress if present
+      if (buttons?.[0]?.onPress) buttons[0].onPress();
+    } else {
+      Alert.alert(title, message, buttons);
+    }
+  };
+
   const handleSignup = async () => {
     // Validations
     if (!fullName || !email || !phone || !password || !confirmPassword) {
-      Alert.alert('Validation Error', 'Please fill in all fields.');
+      showAlert('Validation Error', 'Please fill in all fields.');
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Validation Error', 'Password must be at least 6 characters long.');
+      showAlert('Validation Error', 'Password must be at least 6 characters long.');
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Validation Error', 'Passwords do not match.');
+      showAlert('Validation Error', 'Passwords do not match.');
       return;
     }
 
     // Phone validation (simple check)
     const phoneRegex = /^[0-9+\-\s()]{8,15}$/;
     if (!phoneRegex.test(phone)) {
-      Alert.alert('Validation Error', 'Please enter a valid phone number.');
+      showAlert('Validation Error', 'Please enter a valid phone number.');
       return;
     }
 
     setLoading(true);
     try {
       // 1. Sign up user via Supabase Auth
+      console.log('[Signup] Attempting sign-up for:', email.trim());
       const { data, error: authError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -68,40 +80,47 @@ export default function SignupScreen() {
       });
 
       if (authError) {
-        Alert.alert('Registration Failed', authError.message);
+        console.error('[Signup] Auth error:', authError.message);
+        showAlert('Registration Failed', authError.message);
         return;
       }
 
       if (data?.user) {
         const userId = data.user.id;
-        
-        // 2. Perform fallback manual write to public.users (in case database trigger fails or is delayed)
-        const { error: dbError } = await supabase.from('users').upsert({
-          id: userId,
-          name: fullName.trim(),
-          email: email.trim(),
-          phone: phone.trim(),
-          role: 'user',
-        });
 
-        if (dbError) {
-          console.warn('Profile write fallback error:', dbError.message);
-        }
-
-        // 3. Create a welcoming notification record
-        await supabase.from('notifications').insert({
-          user_id: userId,
-          title: 'Welcome to EventSphere!',
-          message: `Hey ${fullName.split(' ')[0]}, welcome to EventSphere! Plan, discover, and manage your events effortlessly.`,
-          read: false,
-        });
-
-        // 4. Alert user about email verification if session is not immediately available
+        // 4. Check if session is immediately available (email confirmation disabled)
         if (data.session) {
-          Alert.alert('Success', 'Account created successfully!');
-          // Root layout will redirect automatically
+          console.log('[Signup] Session available — writing profile');
+
+          // 2. Write profile to public.users (RLS requires auth.uid() = id, which works now that we have a session)
+          const { error: dbError } = await supabase.from('users').upsert({
+            id: userId,
+            name: fullName.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            role: 'user',
+          });
+
+          if (dbError) {
+            console.warn('[Signup] Profile write error:', dbError.message);
+          }
+
+          // 3. Create a welcoming notification record
+          await supabase.from('notifications').insert({
+            user_id: userId,
+            title: 'Welcome to EventSphere!',
+            message: `Hey ${fullName.split(' ')[0]}, welcome to EventSphere! Plan, discover, and manage your events effortlessly.`,
+            read: false,
+          }).then(({ error }) => {
+            if (error) console.warn('[Signup] Notification insert error:', error.message);
+          });
+
+          console.log('[Signup] Redirecting to tabs');
+          showAlert('Success', 'Account created successfully!');
+          router.replace('/(tabs)');
         } else {
-          Alert.alert(
+          console.log('[Signup] No session — email confirmation likely required');
+          showAlert(
             'Verification Required',
             'Please check your inbox for an email verification link to complete registration.',
             [{ text: 'OK', onPress: () => router.replace('/(auth)/login') }]
@@ -109,7 +128,8 @@ export default function SignupScreen() {
         }
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'An unexpected error occurred.');
+      console.error('[Signup] Unexpected error:', err);
+      showAlert('Error', err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
