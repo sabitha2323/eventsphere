@@ -54,3 +54,59 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## 🔄 GitHub Synchronization
+
+This project is configured with a automated and one-click GitHub synchronization workflow to ensure your code is always backed up and synchronized to [GitHub](https://github.com/sabitha2323/eventsphere).
+
+### How to Synchronize Your Code
+We have provided a custom PowerShell script `git-sync.ps1` at the root of the project to stage, commit, and push your changes safely.
+
+**Run the synchronization script:**
+Open PowerShell at the project root and run:
+```powershell
+.\git-sync.ps1
+```
+*By default, this will automatically generate a descriptive commit message based on your modified files (e.g. `chore: update 2 file(s) - index.tsx [2026-06-18 09:30]`).*
+
+**To use a custom commit message:**
+```powershell
+.\git-sync.ps1 "feat: added new event details screen"
+```
+
+**To pull remote changes before pushing (highly recommended if editing on multiple machines):**
+```powershell
+.\git-sync.ps1 -Pull
+```
+
+### How to Verify Changes
+1. Go to your GitHub repository: [sabitha2323/eventsphere](https://github.com/sabitha2323/eventsphere)
+2. View the **Commits** tab or the files list to verify your changes are reflected online.
+3. The sync script itself prints the exact SHA of the latest pushed commit on completion.
+
+### Error Recovery & Troubleshooting
+
+#### 1. Push Rejected (Non-Fast-Forward)
+*   **Cause**: Someone else pushed changes to the repository, or you made changes on another device.
+*   **Solution**: Run `.\git-sync.ps1 -Pull`. The script will pull the remote changes, rebase your local commits on top of them, and push automatically.
+
+#### 2. Merge Conflicts
+*   **Cause**: You edited the same lines of the same files as someone else.
+*   **Solution**:
+    1. Git will pause and mark the conflicts in the affected files.
+    2. Open the files, locate the conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`), choose the correct code, and save the files.
+    3. Stage the resolved files: `git add .`
+    4. Continue the rebase: `git rebase --continue`
+    5. Run the sync script again: `.\git-sync.ps1`
+
+#### 3. Authentication Failures
+*   **Cause**: GitHub credentials expired or are not configured.
+*   **Solution**: Open terminal/CMD and run:
+    ```bash
+    gh auth login
+    ```
+    Or configure git credentials helper:
+    ```bash
+    git credential-manager configure
+    ```
+
