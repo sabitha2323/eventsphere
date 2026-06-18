@@ -111,7 +111,7 @@ export default function SignupScreen() {
             title: 'Welcome to EventSphere!',
             message: `Hey ${fullName.split(' ')[0]}, welcome to EventSphere! Plan, discover, and manage your events effortlessly.`,
             read: false,
-          }).then(({ error }) => {
+          }).then(({ error }: any) => {
             if (error) console.warn('[Signup] Notification insert error:', error.message);
           });
 

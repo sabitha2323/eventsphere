@@ -311,3 +311,87 @@ values
     300.00,
     true
   );
+
+-- 8. Ticket Tiers Table
+create table public.ticket_tiers (
+  id uuid default gen_random_uuid() primary key,
+  event_id uuid references public.events(id) on delete cascade not null,
+  name text not null,
+  price numeric not null,
+  quantity integer not null,
+  sold integer default 0 not null
+);
+
+alter table public.ticket_tiers enable row level security;
+create policy "Allow public read access to ticket tiers" on public.ticket_tiers for select using (true);
+create policy "Allow event creators to manage tiers" on public.ticket_tiers for all using (
+  exists (
+    select 1 from public.events
+    where events.id = ticket_tiers.event_id and (events.created_by = auth.uid() or exists (
+      select 1 from public.users where users.id = auth.uid() and users.role = 'admin'
+    ))
+  )
+);
+
+-- 9. Promo Codes Table
+create table public.promocodes (
+  id uuid default gen_random_uuid() primary key,
+  code text not null unique,
+  discount numeric not null check (discount >= 0 and discount <= 100),
+  is_active boolean default true not null,
+  "limit" integer,
+  used integer default 0 not null,
+  event_id uuid references public.events(id) on delete cascade
+);
+
+alter table public.promocodes enable row level security;
+create policy "Allow authenticated users to read promo codes" on public.promocodes for select using (auth.role() = 'authenticated');
+create policy "Allow admins and creators to manage promo codes" on public.promocodes for all using (
+  event_id is null or exists (
+    select 1 from public.events
+    where events.id = promocodes.event_id and (events.created_by = auth.uid() or exists (
+      select 1 from public.users where users.id = auth.uid() and users.role = 'admin'
+    ))
+  )
+);
+
+-- 10. Billing Records Table
+create table public.billing_records (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.users(id) on delete cascade not null,
+  ticket_id uuid references public.registrations(id) on delete cascade not null,
+  amount numeric not null,
+  payment_method text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.billing_records enable row level security;
+create policy "Allow users to view their own billing records" on public.billing_records for select using (auth.uid() = user_id or exists (
+  select 1 from public.users where users.id = auth.uid() and users.role = 'admin'
+));
+create policy "Allow users to insert their own billing records" on public.billing_records for insert with check (auth.uid() = user_id);
+
+-- 11. Seed Ticket Tiers Data
+insert into public.ticket_tiers (id, event_id, name, price, quantity, sold)
+values
+  ('tier-1', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'General Admission', 1499.00, 500, 120),
+  ('tier-2', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'VIP Pass', 2999.00, 100, 45),
+  ('tier-3', 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', 'Student Ticket', 150.00, 300, 180),
+  ('tier-4', 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', 'General Entry', 250.00, 200, 50),
+  ('tier-5', 'd4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a', 'Participant Entry', 100.00, 1000, 420),
+  ('tier-6', 'e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b', 'Standard Pass', 150.00, 800, 320),
+  ('tier-7', 'f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c', 'General Entry', 500.00, 50, 18),
+  ('tier-8', 'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v', 'General Entry', 150.00, 1000, 50),
+  ('tier-9', 'g7h8i9j0-k1l2-3m4n-5o6p-7q8r9s0t1u2v', 'VIP Pass', 400.00, 100, 10),
+  ('tier-10', 'h8i9j0k1-l2m3-4n5o-6p7q-8r9s0t1u2v3w', 'Free Registration', 0.00, 500, 220),
+  ('tier-11', 'i9j0k1l2-m3n4-5o6p-7q8r-9s0t1u2v3w4x', 'Team Entry', 300.00, 150, 80)
+on conflict (id) do nothing;
+
+-- 12. Seed Promo Codes Data
+insert into public.promocodes (id, code, discount, is_active, "limit", used, event_id)
+values
+  ('promo-1', 'EARLYBIRD', 20, true, 100, 45, null),
+  ('promo-2', 'NEON25', 25, true, 50, 12, 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'),
+  ('promo-3', 'TECH10', 10, true, 200, 80, 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f')
+on conflict (id) do nothing;
+
