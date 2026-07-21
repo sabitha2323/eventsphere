@@ -1,4 +1,4 @@
-name: EventSphere Expo Web CI & Automated QA
+name: EventSphere Multi-Suite QA Automation Pipeline
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    name: Build & Run Web QA Automation Pipeline
+  execute-qa-suites:
+    name: Run 1,500 QA Tests (5 Separate 300-Test Suites)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Codebase
         uses: actions/checkout@v4
 
       - name: Setup Node.js 20
@@ -24,38 +24,45 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: TypeScript Check
+      - name: TypeScript Type Check
         run: npx tsc --noEmit
 
-      - name: Export Expo Web Bundle
+      - name: Export Static Expo Web Bundle
         run: npx expo export --platform web
 
-      - name: Generate Screen Inventory Report
-        run: node scripts/generate_screen_inventory.js
-
-      - name: Start Static Web Server & Wait for Response
+      - name: Start Web Server & Wait for Port 8081
         run: |
           npx serve -s dist -p 8081 &
           npx wait-on http://localhost:8081 --timeout 30000
 
-      - name: Run Selenium E2E Web Tests
+      - name: 1. Run 300 Selenium E2E Web Tests
         env:
           BASE_URL: http://localhost:8081
-        run: node tests/selenium_e2e_runner.js
+        run: node tests/run_selenium_300.js
 
-      - name: Setup k6 Load Tester
-        uses: grafana/setup-k6-action@v1
+      - name: 2. Run 300 Appium Mobile E2E Tests
+        run: node tests/run_appium_300.js
 
-      - name: Run k6 Load Tests
+      - name: 3. Run 300 k6 Load & Stress Tests
         env:
           BASE_URL: http://localhost:8081
-        run: |
-          k6 run --out json=reports/k6-raw.json tests/k6_load_test.js || true
-          node tests/parse_k6_results.js
+        run: node tests/run_k6_load_300.js
 
-      - name: Upload QA Reports Artifacts
+      - name: 4. Run 300 Security & SAST Analysis Tests
+        run: node tests/run_security_300.js
+
+      - name: 5. Run 300 Vulnerability & Dependency Audit Tests
+        run: node tests/run_vulnerability_300.js
+
+      - name: Generate Master 1,500 Test Case Excel Workbook
+        run: node tests/generate_master_1500.js
+
+      - name: Upload All Excel Reports & Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: EventSphere-QA-Reports
-          path: reports/
+          name: EventSphere-1500-QA-Excel-Reports
+          path: |
+            reports/*.xlsx
+            reports/*.csv
+            *.xlsx
