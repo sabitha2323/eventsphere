@@ -46,6 +46,9 @@ export default function AIAssistantScreen() {
   ]);
 
   const quickPrompts = [
+    '💎 View 3D Holographic VIP Pass',
+    '💺 Open Stage Seat Picker',
+    '💳 Pay via Razorpay Gateway',
     '🎵 Recommend popular music fests',
     '🎉 Find free cultural events near me',
     '💻 Show top tech hackathons this month',

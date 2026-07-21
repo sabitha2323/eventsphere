@@ -246,12 +246,43 @@ export default function HomeScreen() {
             >
               <GlassView style={styles.aiBannerInner}>
                 <View style={styles.aiBannerTextGroup}>
-                  <Text style={styles.aiBannerTitle}>✨ AI Event Concierge</Text>
-                  <Text style={styles.aiBannerSub}>Ask AI for event recommendations & planning advice</Text>
+                  <Text style={styles.aiBannerTitle}>✨ AI Event Concierge Assistant</Text>
+                  <Text style={styles.aiBannerSub}>Ask AI for instant event recommendations, venues & ticketing</Text>
                 </View>
                 <AppIcon name="chevron.right" size={18} tintColor={Theme.colors.primary} />
               </GlassView>
             </TouchableOpacity>
+
+            {/* Premium Features Quick Navigation Bar */}
+            <View style={{ flexDirection: 'row', gap: 8, marginVertical: Theme.spacing.sm }}>
+              <TouchableOpacity
+                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(124, 58, 237, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#7C3AED', alignItems: 'center' }}
+                onPress={() => router.push('/ticket/ar-pass')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#7C3AED' }}>💎 3D VIP Pass</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(37, 99, 235, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#2563EB', alignItems: 'center' }}
+                onPress={() => router.push('/checkout/seat-selection')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#2563EB' }}>💺 Seat Picker</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#10B981', alignItems: 'center' }}
+                onPress={() => router.push('/checkout/razorpay')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#10B981' }}>💳 Razorpay Pro</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(245, 158, 11, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#F59E0B', alignItems: 'center' }}
+                onPress={() => router.push('/organizer/budget-calculator')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#F59E0B' }}>💰 Budget Calc</Text>
+              </TouchableOpacity>
+            </View>
 
             {/* Search Bar */}
             <GlassView style={styles.searchBarContainer} intensity="medium">
