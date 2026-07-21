@@ -60,6 +60,7 @@ export default function RootLoginPortalDashboard() {
     <View style={styles.container}>
       <View style={styles.backgroundAccent1} />
       <View style={styles.backgroundAccent2} />
+      <View style={styles.backgroundAccent3} />
 
       {/* Top Navbar */}
       <View style={styles.navbar}>
@@ -193,7 +194,7 @@ export default function RootLoginPortalDashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
+    backgroundColor: '#070B19',
     ...Platform.select({
       web: {
         maxWidth: 1400,
@@ -204,23 +205,33 @@ const styles = StyleSheet.create({
   },
   backgroundAccent1: {
     position: 'absolute',
-    top: -100,
-    left: -100,
-    width: 350,
-    height: 350,
-    borderRadius: 175,
-    backgroundColor: 'rgba(124, 58, 237, 0.15)',
-    filter: Platform.OS === 'web' ? 'blur(90px)' : undefined,
+    top: -80,
+    left: -80,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    backgroundColor: 'rgba(124, 58, 237, 0.35)',
+    filter: Platform.OS === 'web' ? 'blur(100px)' : undefined,
   },
   backgroundAccent2: {
     position: 'absolute',
     bottom: -100,
     right: -100,
-    width: 350,
-    height: 350,
-    borderRadius: 175,
-    backgroundColor: 'rgba(0, 194, 255, 0.12)',
-    filter: Platform.OS === 'web' ? 'blur(90px)' : undefined,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    backgroundColor: 'rgba(6, 182, 212, 0.28)',
+    filter: Platform.OS === 'web' ? 'blur(100px)' : undefined,
+  },
+  backgroundAccent3: {
+    position: 'absolute',
+    top: '40%',
+    left: '35%',
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    backgroundColor: 'rgba(236, 72, 153, 0.20)',
+    filter: Platform.OS === 'web' ? 'blur(110px)' : undefined,
   },
   navbar: {
     paddingHorizontal: Theme.spacing.lg,

@@ -399,7 +399,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
+    backgroundColor: '#070B19',
     ...Platform.select({
       web: {
         maxWidth: 1400,
@@ -413,22 +413,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -50,
     right: -50,
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: 'rgba(124, 58, 237, 0.12)',
-    filter: Platform.OS === 'web' ? 'blur(60px)' : undefined,
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    backgroundColor: 'rgba(124, 58, 237, 0.25)',
+    filter: Platform.OS === 'web' ? 'blur(90px)' : undefined,
     zIndex: -1,
   },
   backgroundAccent2: {
     position: 'absolute',
     bottom: 100,
     left: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(0, 194, 255, 0.08)',
-    filter: Platform.OS === 'web' ? 'blur(80px)' : undefined,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    backgroundColor: 'rgba(6, 182, 212, 0.20)',
+    filter: Platform.OS === 'web' ? 'blur(100px)' : undefined,
     zIndex: -1,
   },
   header: {
