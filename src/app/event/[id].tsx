@@ -54,6 +54,10 @@ export default function EventDetailsScreen() {
   const [registered, setRegistered] = useState(false);
   const [regLoading, setRegLoading] = useState(false);
 
+  // Music Audio Player State
+  const [isPlayingTrack, setIsPlayingTrack] = useState(false);
+  const [currentTrackTitle, setCurrentTrackTitle] = useState('Neon Beats Festival Anthem (Radio Edit)');
+
   // New comment state
   const [rating, setRating] = useState(5);
   const [newCommentText, setNewCommentText] = useState('');
@@ -418,6 +422,47 @@ export default function EventDetailsScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>About The Event</Text>
             <Text style={styles.descriptionText}>{event.description}</Text>
+          </View>
+
+          {/* Featured Event Songs & Audio Playlist */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>🎵 Featured Event Songs & Lineup Playlist</Text>
+            <GlassView style={{ padding: Theme.spacing.md, borderRadius: Theme.borderRadius.md, backgroundColor: 'rgba(15, 23, 42, 0.04)', borderWidth: 1, borderColor: 'rgba(124, 58, 237, 0.15)' }} intensity="high">
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <View style={{ flex: 1, paddingRight: 10 }}>
+                  <Text style={{ fontSize: 10, fontFamily: Theme.fonts.bold, color: Theme.colors.primary, letterSpacing: 0.5 }}>NOW PLAYING SAMPLE</Text>
+                  <Text style={{ fontSize: 14, fontFamily: Theme.fonts.bold, color: Theme.colors.text, marginTop: 2 }}>{currentTrackTitle}</Text>
+                </View>
+                <TouchableOpacity
+                  style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' }}
+                  onPress={() => setIsPlayingTrack(!isPlayingTrack)}
+                >
+                  <AppIcon name={isPlayingTrack ? 'pause.fill' : 'play.fill'} size={20} tintColor="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Sample Track List */}
+              <View style={{ gap: 8 }}>
+                {[
+                  { title: `${event.title} Official Theme Song`, duration: '3:45' },
+                  { title: 'Headliner Live Stage Anthem - DJ Alok', duration: '4:12' },
+                  { title: 'Acoustic Sunset Vocal Live (VIP Cut)', duration: '3:50' },
+                  { title: 'Cyber Symphony EDM Remix', duration: '5:05' },
+                ].map((track, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: currentTrackTitle === track.title ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.5)', borderRadius: 8, borderWidth: 1, borderColor: currentTrackTitle === track.title ? Theme.colors.primary : 'rgba(15, 23, 42, 0.05)' }}
+                    onPress={() => { setCurrentTrackTitle(track.title); setIsPlayingTrack(true); }}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                      <AppIcon name="music.note" size={14} tintColor={Theme.colors.primary} />
+                      <Text style={{ fontSize: 12, fontFamily: Theme.fonts.bold, color: Theme.colors.text }}>{track.title}</Text>
+                    </View>
+                    <Text style={{ fontSize: 11, color: Theme.colors.textMuted, fontFamily: Theme.fonts.medium }}>{track.duration}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </GlassView>
           </View>
 
           {/* Comments/Reviews Section */}
