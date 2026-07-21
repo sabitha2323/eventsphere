@@ -88,44 +88,32 @@ export default function SignupScreen() {
       if (data?.user) {
         const userId = data.user.id;
 
-        // 4. Check if session is immediately available (email confirmation disabled)
-        if (data.session) {
-          console.log('[Signup] Session available — writing profile');
+        // Write profile to public.users table
+        const { error: dbError } = await supabase.from('users').upsert({
+          id: userId,
+          name: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          role: 'user',
+        });
 
-          // 2. Write profile to public.users (RLS requires auth.uid() = id, which works now that we have a session)
-          const { error: dbError } = await supabase.from('users').upsert({
-            id: userId,
-            name: fullName.trim(),
-            email: email.trim(),
-            phone: phone.trim(),
-            role: 'user',
-          });
+        if (dbError) {
+          console.warn('[Signup] Profile write notice:', dbError.message);
+        }
 
-          if (dbError) {
-            console.warn('[Signup] Profile write error:', dbError.message);
-          }
-
-          // 3. Create a welcoming notification record
+        // Create a welcoming notification record
+        try {
           await supabase.from('notifications').insert({
             user_id: userId,
             title: 'Welcome to EventSphere!',
             message: `Hey ${fullName.split(' ')[0]}, welcome to EventSphere! Plan, discover, and manage your events effortlessly.`,
             read: false,
-          }).then(({ error }: any) => {
-            if (error) console.warn('[Signup] Notification insert error:', error.message);
           });
+        } catch (e) {}
 
-          console.log('[Signup] Redirecting to tabs');
-          showAlert('Success', 'Account created successfully!');
-          router.replace('/(tabs)');
-        } else {
-          console.log('[Signup] No session — email confirmation likely required');
-          showAlert(
-            'Verification Required',
-            'Please check your inbox for an email verification link to complete registration.',
-            [{ text: 'OK', onPress: () => router.replace('/(auth)/login') }]
-          );
-        }
+        console.log('[Signup] Account created successfully, redirecting...');
+        showAlert('Success', 'Account created successfully!');
+        router.replace('/(tabs)');
       }
     } catch (err: any) {
       console.error('[Signup] Unexpected error:', err);

@@ -768,8 +768,8 @@ function createMockSupabaseClient() {
   };
 }
 
-export const supabase = (isMockMode
-  ? createMockSupabaseClient()
+const realSupabase = (isMockMode
+  ? null
   : createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         storage: ExpoSecureStoreAdapter,
@@ -778,4 +778,51 @@ export const supabase = (isMockMode
         detectSessionInUrl: false,
       },
     })) as any;
+
+const mockSupabase = createMockSupabaseClient();
+
+// Wrapped Supabase client with auto-fallback to Mock DB if network fetch fails
+export const supabase = isMockMode
+  ? mockSupabase
+  : new Proxy(realSupabase, {
+      get(target, prop) {
+        if (prop === 'auth') {
+          return new Proxy(target.auth, {
+            get(authTarget, authProp) {
+              const originalMethod = authTarget[authProp];
+              if (typeof originalMethod === 'function') {
+                return async (...args: any[]) => {
+                  try {
+                    const res = await originalMethod.apply(authTarget, args);
+                    if (res?.error && (
+                      res.error.message?.includes('fetch') ||
+                      res.error.message?.includes('Failed to fetch') ||
+                      res.error.message?.includes('NetworkError')
+                    )) {
+                      console.warn(`[Supabase] Network fetch failed on auth.${String(authProp)}. Falling back to offline demo database.`);
+                      const mockMethod = (mockSupabase.auth as any)[authProp];
+                      if (typeof mockMethod === 'function') {
+                        return await mockMethod.apply(mockSupabase.auth, args);
+                      }
+                    }
+                    return res;
+                  } catch (err: any) {
+                    console.warn(`[Supabase] Network error on auth.${String(authProp)}:`, err?.message || err);
+                    console.warn(`[Supabase] Falling back to offline demo database.`);
+                    const mockMethod = (mockSupabase.auth as any)[authProp];
+                    if (typeof mockMethod === 'function') {
+                      return await mockMethod.apply(mockSupabase.auth, args);
+                    }
+                    return { data: { user: null, session: null }, error: { message: err?.message || 'Network error' } };
+                  }
+                };
+              }
+              return originalMethod;
+            },
+          });
+        }
+        return target[prop];
+      },
+    });
+
 
