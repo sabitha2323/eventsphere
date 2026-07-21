@@ -384,15 +384,7 @@ async function getMockDb(): Promise<any> {
       if (!mockDbInMemory.users) {
         mockDbInMemory.users = seedUsers;
       }
-      if (!mockDbInMemory.events) {
-        mockDbInMemory.events = seedEvents;
-      } else {
-        seedEvents.forEach(se => {
-          if (!mockDbInMemory.events.some((e: any) => e.id === se.id)) {
-            mockDbInMemory.events.push(se);
-          }
-        });
-      }
+      mockDbInMemory.events = seedEvents;
       if (!mockDbInMemory.registrations) mockDbInMemory.registrations = [];
       if (!mockDbInMemory.comments) mockDbInMemory.comments = [];
       if (!mockDbInMemory.notifications) mockDbInMemory.notifications = [];
