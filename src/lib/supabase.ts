@@ -51,6 +51,7 @@ const ExpoSecureStoreAdapter = {
 const isMockMode =
   !supabaseUrl ||
   supabaseUrl.includes('your-project-id') ||
+  supabaseUrl.includes('vnadskqnxkxwwuqlkzif') ||
   !supabaseAnonKey ||
   supabaseAnonKey.includes('your-supabase-anon-key');
 
