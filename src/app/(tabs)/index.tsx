@@ -227,6 +227,12 @@ export default function HomeScreen() {
           <Text style={styles.logoText}>EventSphere</Text>
           <Text style={styles.taglineText}>Plan, Discover and Manage Events Effortlessly</Text>
         </View>
+        <TouchableOpacity
+          style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: Theme.colors.primary, borderRadius: 10 }}
+          onPress={() => router.push('/(auth)/login')}
+        >
+          <Text style={{ color: '#FFFFFF', fontFamily: Theme.fonts.bold, fontSize: 13 }}>Sign In / Login</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Main Scrollable Content */}
@@ -396,9 +402,10 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background,
     ...Platform.select({
       web: {
-        maxWidth: 800,
+        maxWidth: 1400,
         alignSelf: 'center',
         width: '100%',
+        paddingHorizontal: Theme.spacing.md,
       } as any,
     }),
   },
@@ -431,6 +438,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(15, 23, 42, 0.05)',
   },
   logoText: {
     fontSize: 26,

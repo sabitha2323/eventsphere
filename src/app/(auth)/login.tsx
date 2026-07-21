@@ -188,6 +188,40 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
 
+            {/* Quick Demo Sign-In Buttons */}
+            <View style={{ gap: 8, marginVertical: Theme.spacing.md }}>
+              <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: Theme.colors.textMuted, textAlign: 'center', textTransform: 'uppercase' }}>Or 1-Click Demo Login</Text>
+              
+              <TouchableOpacity
+                style={{ height: 42, backgroundColor: 'rgba(37, 99, 235, 0.1)', borderRadius: 10, borderWidth: 1, borderColor: '#2563EB', justifyContent: 'center', alignItems: 'center' }}
+                onPress={() => {
+                  setEmail('demo@eventsphere.com');
+                  setPassword('password123');
+                  router.replace('/(tabs)');
+                }}
+              >
+                <Text style={{ fontSize: 13, fontFamily: Theme.fonts.bold, color: '#2563EB' }}>⚡ Demo User Sign In</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ height: 42, backgroundColor: 'rgba(124, 58, 237, 0.1)', borderRadius: 10, borderWidth: 1, borderColor: '#7C3AED', justifyContent: 'center', alignItems: 'center' }}
+                onPress={() => {
+                  setEmail('admin@eventsphere.com');
+                  setPassword('admin123');
+                  router.replace('/(tabs)/admin' as any);
+                }}
+              >
+                <Text style={{ fontSize: 13, fontFamily: Theme.fonts.bold, color: '#7C3AED' }}>👑 Demo Admin Sign In</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={{ padding: 8, alignItems: 'center', marginBottom: Theme.spacing.md }}
+              onPress={() => router.replace('/(tabs)')}
+            >
+              <Text style={{ fontSize: 12, fontFamily: Theme.fonts.medium, color: Theme.colors.textMuted, textDecorationLine: 'underline' }}>Return to Main Web Application Dashboard</Text>
+            </TouchableOpacity>
+
             <View style={styles.footerContainer}>
               <Text style={styles.footerText}>Don't have an account? </Text>
               <Link href="/(auth)/signup" asChild>
