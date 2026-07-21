@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -98,15 +98,15 @@ export default function CardInputScreen() {
             message: `You have booked ${ticketCount} slot(s) for "${eventData?.title || 'Event'}" via Credit Card.`,
           });
 
-          // Go to Success screen
+          // Go to Congrats screen
           router.push({
-            pathname: '/checkout/success',
+            pathname: '/checkout/congrats',
             params: {
               eventId,
-              regId: regRecord?.id || 'mock-id',
+              regId: regRecord?.id || 'REG-MOCK-CARD',
               total,
               ticketCount,
-              method: 'Credit Card',
+              method: 'Credit / Debit Card',
             }
           } as any);
         }

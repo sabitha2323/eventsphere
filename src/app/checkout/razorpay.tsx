@@ -41,19 +41,20 @@ export default function RazorpayCheckoutScreen() {
     setProcessing(true);
     setTimeout(() => {
       const razorpayPaymentId = `pay_Rzp${Math.random().toString(36).substring(2, 12).toUpperCase()}`;
+      const regId = `REG-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
       setProcessing(false);
 
-      if (Platform.OS === 'web' && typeof window !== 'undefined') {
-        window.alert(`🎉 Razorpay Payment Successful!\nPayment ID: ${razorpayPaymentId}\nAmount Paid: ₹${totalAmount}`);
-        router.replace(`/checkout/receipt/order-${Date.now()}` as any);
-      } else {
-        Alert.alert(
-          'Payment Successful!',
-          `Razorpay ID: ${razorpayPaymentId}\nAmount Paid: ₹${totalAmount}`,
-          [{ text: 'View Ticket', onPress: () => router.replace('/ticket/reg-987654321' as any) }]
-        );
-      }
-    }, 1500);
+      router.replace({
+        pathname: '/checkout/congrats',
+        params: {
+          eventTitle,
+          regId,
+          total: totalAmount,
+          method: 'Razorpay Pro Gateway',
+          paymentId: razorpayPaymentId,
+        }
+      } as any);
+    }, 1200);
   };
 
   return (

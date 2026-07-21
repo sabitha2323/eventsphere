@@ -118,57 +118,22 @@ export default function EventDetailsScreen() {
   }, [id]);
 
   const handleRegister = async () => {
-    if (!currentUser) {
-      Alert.alert('Auth Required', 'Please log in to register for events.');
+    if (registered) {
+      Alert.alert('Already Registered', 'You have already booked tickets for this event!');
+      router.push('/ticket/pass-wallet');
       return;
     }
 
-    setRegLoading(true);
-    try {
-      if (registered) {
-        // Cancel registration
-        const { error } = await supabase
-          .from('registrations')
-          .delete()
-          .eq('event_id', id)
-          .eq('user_id', currentUser.id);
-
-        if (error) {
-          Alert.alert('Error', error.message);
-        } else {
-          setRegistered(false);
-          Alert.alert('Cancelled', 'Your registration has been cancelled.');
-        }
-      } else {
-        // Register for event
-        const { error } = await supabase
-          .from('registrations')
-          .insert({
-            event_id: id,
-            user_id: currentUser.id,
-          });
-
-        if (error) {
-          Alert.alert('Registration Failed', error.message);
-        } else {
-          setRegistered(true);
-
-          // Add System Notification
-          await supabase.from('notifications').insert({
-            user_id: currentUser.id,
-            title: 'Registration Successful!',
-            message: `You are registered for "${event?.title}". Get ready!`,
-            read: false,
-          });
-
-          Alert.alert('Success!', `You are registered for ${event?.title}!`);
-        }
+    router.push({
+      pathname: '/checkout/payment-method',
+      params: {
+        eventId: id,
+        eventTitle: event?.title || 'Event Booking',
+        total: event?.ticket_price || 1499,
+        ticketCount: 1,
+        tierName: 'General Entry Pass',
       }
-    } catch (err: any) {
-      Alert.alert('Error', err.message || 'Something went wrong.');
-    } finally {
-      setRegLoading(false);
-    }
+    } as any);
   };
 
   const handleShare = async () => {

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -107,15 +107,15 @@ export default function UpiSimulatorScreen() {
               message: `Your booking for "${eventData?.title || 'Event'}" was processed via UPI ID ${upiId.trim()}.`,
             });
 
-            // Redirect to Success
+            // Redirect to Congrats screen
             router.push({
-              pathname: '/checkout/success',
+              pathname: '/checkout/congrats',
               params: {
                 eventId,
-                regId: regRecord?.id || 'mock-id',
+                regId: regRecord?.id || 'REG-MOCK-UPI',
                 total,
                 ticketCount,
-                method: 'UPI',
+                method: 'UPI Instant Payment',
               }
             } as any);
           }
