@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -69,6 +69,28 @@ export default function PaymentMethodScreen() {
 
         {/* Payment Choices */}
         <View style={styles.choicesList}>
+          {/* Razorpay Pro option */}
+          <TouchableOpacity
+            onPress={() => router.push({
+              pathname: '/checkout/razorpay',
+              params: { price: total || '1499', quantity: ticketCount || '1' }
+            } as any)}
+            style={styles.choiceCard}
+          >
+            <GlassView style={[styles.choiceCardInner, { borderColor: '#2563EB', borderWidth: 1, backgroundColor: 'rgba(37, 99, 235, 0.06)' }]} intensity="high">
+              <View style={styles.choiceLeft}>
+                <View style={[styles.iconBox, { backgroundColor: '#2563EB' }]}>
+                  <AppIcon name="lock.fill" size={20} tintColor="#FFFFFF" />
+                </View>
+                <View>
+                  <Text style={[styles.choiceTitle, { color: '#2563EB' }]}>Razorpay Pro Gateway ⭐ (Recommended)</Text>
+                  <Text style={styles.choiceDesc}>UPI Apps, Cards, NetBanking & Instant Verification</Text>
+                </View>
+              </View>
+              <AppIcon name="chevron.right" size={16} tintColor="#2563EB" />
+            </GlassView>
+          </TouchableOpacity>
+
           {/* Card option */}
           <TouchableOpacity onPress={() => handleSelectMethod('card')} style={styles.choiceCard}>
             <GlassView style={styles.choiceCardInner} intensity="low">

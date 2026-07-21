@@ -290,7 +290,7 @@ const generateCategoryEvents = () => {
       catalog.push({
         id: idStr,
         title: tTitle,
-        description: `Join us for ${tTitle}! An exclusive event featuring top performers, keynotes, interactive sessions, and networking in ${city}.`,
+        description: `Step into an extraordinary experience at ${tTitle} in ${city}! This premier ${catName} flagship gathering brings together top-tier performers, renowned industry headliners, immersive 3D stage lighting setups, high-fidelity acoustic sound systems, curated gourmet food and craft beverage lounges, and exclusive VIP lounge privileges. Enjoy convenient on-site multi-level parking, dedicated security, and instant digital check-in. Don't miss out on securing your spot for an unforgettable ${catName.toLowerCase()} experience with fellow enthusiasts in the city!`,
         category: catName,
         date: new Date(Date.now() + (idx + 2) * 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         time: `${10 + (idx % 8)}:00 - ${16 + (idx % 6)}:30`,

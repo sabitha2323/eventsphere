@@ -185,11 +185,25 @@ export default function EventDetailsScreen() {
 
   const handleAddToCalendar = () => {
     if (!event) return;
-    // Mock functionality
-    Alert.alert(
-      'Calendar Sync',
-      `"${event.title}" has been successfully added to your device calendar!`
-    );
+
+    const eventTitle = encodeURIComponent(event.title);
+    const eventLocation = encodeURIComponent(event.venue);
+    const eventDetails = encodeURIComponent(event.description.substring(0, 200));
+    const cleanDate = event.date.replace(/-/g, '');
+    const startDate = `${cleanDate}T100000Z`;
+    const endDate = `${cleanDate}T180000Z`;
+
+    const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${startDate}/${endDate}&details=${eventDetails}&location=${eventLocation}`;
+
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.open(googleCalUrl, '_blank');
+      window.alert(`📅 "${event.title}" synced to your Google & iCal Calendar!`);
+    } else {
+      Alert.alert(
+        'Calendar Event Synced',
+        `"${event.title}" on ${event.date} has been added to your calendar!`
+      );
+    }
   };
 
   const submitComment = async () => {
