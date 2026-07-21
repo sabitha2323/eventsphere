@@ -297,7 +297,7 @@ const generateCategoryEvents = () => {
         venue: `${catInfo.venuePrefix}, ${city}`,
         organizer: `EventSphere ${catName} Guild`,
         image_url: catInfo.images[idx % catInfo.images.length],
-        ticket_price: catInfo.basePrice === 0 ? 0 : catInfo.basePrice + (idx * 50),
+        ticket_price: [1500, 2500, 3000, 4000, 1800, 3500, 2200, 4500, 1200, 5000][idx % 10],
         is_approved: true,
         created_by: null,
       });

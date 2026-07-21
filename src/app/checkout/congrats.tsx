@@ -37,7 +37,7 @@ export default function RegistrationCongratsScreen() {
         </View>
 
         <Text style={styles.congratsHeading}>🎉 Congratulations!</Text>
-        <Text style={styles.congratsSub}>You Have Successfully Registered for this Event!</Text>
+        <Text style={styles.congratsSub}>🎉 You Have Booked a Ticket!</Text>
         <Text style={styles.descriptionText}>
           Your seat and pass have been locked in. Payment was verified via {method}.
         </Text>
