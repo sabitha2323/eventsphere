@@ -184,6 +184,15 @@ export default function DigitalTicketScreen() {
 
           </GlassView>
 
+          {/* Digital Pass Wallet Shortcut */}
+          <TouchableOpacity
+            style={styles.walletBtn}
+            onPress={() => router.push('/ticket/pass-wallet')}
+          >
+            <AppIcon name="qrcode.viewfinder" size={16} tintColor={Theme.colors.white} />
+            <Text style={styles.walletText}>Open Interactive 3D Digital Wallet Pass</Text>
+          </TouchableOpacity>
+
           {/* Refund Trigger & Home buttons */}
           <TouchableOpacity
             style={styles.refundBtn}
@@ -377,6 +386,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: Theme.fonts.bold,
     color: Theme.colors.text,
+  },
+  walletBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    width: '100%',
+    maxWidth: 360,
+    height: 44,
+    backgroundColor: Theme.colors.primary,
+    borderRadius: Theme.borderRadius.md,
+    marginTop: 12,
+  },
+  walletText: {
+    color: Theme.colors.white,
+    fontSize: 13,
+    fontFamily: Theme.fonts.bold,
   },
   refundBtn: {
     flexDirection: 'row',

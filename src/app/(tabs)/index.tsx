@@ -239,6 +239,20 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollList}
         ListHeaderComponent={
           <View>
+            {/* AI Concierge Shortcut Banner */}
+            <TouchableOpacity
+              style={styles.aiBanner}
+              onPress={() => router.push('/ai-assistant')}
+            >
+              <GlassView style={styles.aiBannerInner}>
+                <View style={styles.aiBannerTextGroup}>
+                  <Text style={styles.aiBannerTitle}>✨ AI Event Concierge</Text>
+                  <Text style={styles.aiBannerSub}>Ask AI for event recommendations & planning advice</Text>
+                </View>
+                <AppIcon name="chevron.right" size={18} tintColor={Theme.colors.primary} />
+              </GlassView>
+            </TouchableOpacity>
+
             {/* Search Bar */}
             <GlassView style={styles.searchBarContainer} intensity="medium">
               <AppIcon name="magnifyingglass" size={20} tintColor={Theme.colors.textMuted} />
@@ -373,6 +387,33 @@ const styles = StyleSheet.create({
   scrollList: {
     paddingBottom: 100,
     paddingHorizontal: Theme.spacing.lg,
+  },
+  aiBanner: {
+    marginBottom: Theme.spacing.md,
+  },
+  aiBannerInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: Theme.spacing.md,
+    borderRadius: Theme.borderRadius.md,
+    borderColor: Theme.colors.glassPrimaryBorder,
+    borderWidth: 1,
+    backgroundColor: Theme.colors.glassPrimaryBg,
+  },
+  aiBannerTextGroup: {
+    flex: 1,
+  },
+  aiBannerTitle: {
+    fontSize: 14,
+    fontFamily: Theme.fonts.bold,
+    fontWeight: '700',
+    color: Theme.colors.primary,
+  },
+  aiBannerSub: {
+    fontSize: 12,
+    color: Theme.colors.textMuted,
+    marginTop: 2,
   },
   searchBarContainer: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -136,7 +136,14 @@ export default function OrganizerDashboardScreen() {
           <TouchableOpacity onPress={() => router.push('/organizer/payouts' as any)} style={styles.hubBtn}>
             <GlassView style={styles.hubBtnInner} intensity="medium">
               <AppIcon name="creditcard" size={18} tintColor={Theme.colors.success} />
-              <Text style={styles.hubBtnText}>Payout Settings</Text>
+              <Text style={styles.hubBtnText}>Payouts</Text>
+            </GlassView>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push('/organizer/budget-calculator' as any)} style={styles.hubBtn}>
+            <GlassView style={styles.hubBtnInner} intensity="medium">
+              <AppIcon name="calculator" size={18} tintColor={Theme.colors.warning} />
+              <Text style={styles.hubBtnText}>Budgeting</Text>
             </GlassView>
           </TouchableOpacity>
         </View>
