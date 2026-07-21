@@ -34,7 +34,10 @@
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~56.0.4",
-    "typescript": "~6.0.3"
+    "selenium-webdriver": "^4.28.0",
+    "serve": "^14.2.4",
+    "typescript": "~6.0.3",
+    "wait-on": "^8.0.2"
   },
   "scripts": {
     "start": "expo start",

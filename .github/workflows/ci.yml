@@ -1,23 +1,21 @@
-name: EventSphere CI
+name: EventSphere Expo Web CI & Automated QA
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  validate:
-    name: Build and Type Check
+  test:
+    name: Build & Run Web QA Automation Pipeline
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -28,3 +26,36 @@ jobs:
 
       - name: TypeScript Check
         run: npx tsc --noEmit
+
+      - name: Export Expo Web Bundle
+        run: npx expo export --platform web
+
+      - name: Generate Screen Inventory Report
+        run: node scripts/generate_screen_inventory.js
+
+      - name: Start Static Web Server & Wait for Response
+        run: |
+          npx serve -s dist -p 8081 &
+          npx wait-on http://localhost:8081 --timeout 30000
+
+      - name: Run Selenium E2E Web Tests
+        env:
+          BASE_URL: http://localhost:8081
+        run: node tests/selenium_e2e_runner.js
+
+      - name: Setup k6 Load Tester
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 Load Tests
+        env:
+          BASE_URL: http://localhost:8081
+        run: |
+          k6 run --out json=reports/k6-raw.json tests/k6_load_test.js || true
+          node tests/parse_k6_results.js
+
+      - name: Upload QA Reports Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EventSphere-QA-Reports
+          path: reports/

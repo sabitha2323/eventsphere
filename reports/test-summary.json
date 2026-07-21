@@ -1,0 +1,369 @@
+{
+  "timestamp": "2026-07-20T08:59:36.744Z",
+  "totalTestsExecuted": 40,
+  "passedCount": 40,
+  "failedCount": 0,
+  "skippedCount": 0,
+  "tests": [
+    {
+      "testId": "SEL_TC001",
+      "screenName": "Login Screen",
+      "routeUrl": "/login",
+      "category": "Authentication",
+      "status": "Passed",
+      "durationMs": 944,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC002",
+      "screenName": "Signup Screen",
+      "routeUrl": "/signup",
+      "category": "Authentication",
+      "status": "Passed",
+      "durationMs": 329,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC003",
+      "screenName": "Home Landing Screen",
+      "routeUrl": "/",
+      "category": "Core App",
+      "status": "Passed",
+      "durationMs": 478,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC004",
+      "screenName": "User Dashboard",
+      "routeUrl": "/dashboard",
+      "category": "Core App",
+      "status": "Passed",
+      "durationMs": 326,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC005",
+      "screenName": "Create Event Wizard",
+      "routeUrl": "/create",
+      "category": "Core App",
+      "status": "Passed",
+      "durationMs": 291,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC006",
+      "screenName": "Admin Console",
+      "routeUrl": "/admin",
+      "category": "Administration",
+      "status": "Passed",
+      "durationMs": 262,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC007",
+      "screenName": "Event Details",
+      "routeUrl": "/event/demo-1",
+      "category": "Event View",
+      "status": "Passed",
+      "durationMs": 227,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC008",
+      "screenName": "Search Categories",
+      "routeUrl": "/search/categories",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 323,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC009",
+      "screenName": "Search Calendar",
+      "routeUrl": "/search/calendar",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 294,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC010",
+      "screenName": "Search Filters",
+      "routeUrl": "/search/filters",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 319,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC011",
+      "screenName": "Free Events Finder",
+      "routeUrl": "/search/free-events",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 267,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC012",
+      "screenName": "Interactive Event Map",
+      "routeUrl": "/search/map",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 250,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC013",
+      "screenName": "Nearby Events Search",
+      "routeUrl": "/search/nearby",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 267,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC014",
+      "screenName": "Online Events Search",
+      "routeUrl": "/search/online-events",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 231,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC015",
+      "screenName": "Saved Events List",
+      "routeUrl": "/search/saved-events",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 236,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC016",
+      "screenName": "Trending Events",
+      "routeUrl": "/search/trending",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 258,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC017",
+      "screenName": "Category Detail View",
+      "routeUrl": "/search/category/music",
+      "category": "Discovery",
+      "status": "Passed",
+      "durationMs": 239,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC018",
+      "screenName": "Select Tickets",
+      "routeUrl": "/checkout/select-tickets",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 233,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC019",
+      "screenName": "Billing Details",
+      "routeUrl": "/checkout/billing-details",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 270,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC020",
+      "screenName": "Payment Method Select",
+      "routeUrl": "/checkout/payment-method",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 295,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC021",
+      "screenName": "Card Input Form",
+      "routeUrl": "/checkout/card-input",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 256,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC022",
+      "screenName": "UPI Simulator",
+      "routeUrl": "/checkout/upi-sim",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 256,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC023",
+      "screenName": "Checkout Success",
+      "routeUrl": "/checkout/success",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 265,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC024",
+      "screenName": "Checkout Failed",
+      "routeUrl": "/checkout/failed",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 261,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC025",
+      "screenName": "Order Receipt",
+      "routeUrl": "/checkout/receipt/order-1",
+      "category": "Checkout",
+      "status": "Passed",
+      "durationMs": 221,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC026",
+      "screenName": "Ticket Pass View",
+      "routeUrl": "/ticket/t-1",
+      "category": "Tickets",
+      "status": "Passed",
+      "durationMs": 232,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC027",
+      "screenName": "Ticket Refund Form",
+      "routeUrl": "/ticket/refund/t-1",
+      "category": "Tickets",
+      "status": "Passed",
+      "durationMs": 215,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC028",
+      "screenName": "Social Chat Room",
+      "routeUrl": "/social/chat/e-1",
+      "category": "Social",
+      "status": "Passed",
+      "durationMs": 266,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC029",
+      "screenName": "Social FAQ View",
+      "routeUrl": "/social/faq/e-1",
+      "category": "Social",
+      "status": "Passed",
+      "durationMs": 222,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC030",
+      "screenName": "Social Reviews View",
+      "routeUrl": "/social/reviews/e-1",
+      "category": "Social",
+      "status": "Passed",
+      "durationMs": 234,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC031",
+      "screenName": "Organizer Analytics",
+      "routeUrl": "/organizer/analytics",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 258,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC032",
+      "screenName": "Organizer Attendees",
+      "routeUrl": "/organizer/attendees-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 243,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC033",
+      "screenName": "Organizer Check-in QR",
+      "routeUrl": "/organizer/checkin-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 212,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC034",
+      "screenName": "Organizer Collaborators",
+      "routeUrl": "/organizer/collaborators-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 208,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC035",
+      "screenName": "Organizer Dashboard",
+      "routeUrl": "/organizer/dashboard",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 283,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC036",
+      "screenName": "Organizer Edit Event",
+      "routeUrl": "/organizer/edit-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 244,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC037",
+      "screenName": "Organizer Email Broadcast",
+      "routeUrl": "/organizer/email-broadcast-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 198,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC038",
+      "screenName": "Organizer Payouts",
+      "routeUrl": "/organizer/payouts",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 375,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC039",
+      "screenName": "Organizer Promocodes",
+      "routeUrl": "/organizer/promocodes",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 252,
+      "errorMsg": "None"
+    },
+    {
+      "testId": "SEL_TC040",
+      "screenName": "Organizer Ticket Types",
+      "routeUrl": "/organizer/ticket-types-e-1",
+      "category": "Organizer",
+      "status": "Passed",
+      "durationMs": 215,
+      "errorMsg": "None"
+    }
+  ]
+}

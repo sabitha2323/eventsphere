@@ -19,6 +19,7 @@ import '../screens/profile/profile_screen.dart';
 import '../screens/owner/owner_dashboard_screen.dart';
 import '../screens/admin/admin_dashboard_screen.dart';
 import '../screens/notifications/notifications_screen.dart';
+import '../screens/screens.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -112,6 +113,99 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: '/checkout/select-tickets/:hallId',
+        builder: (context, state) {
+          final hallId = state.pathParameters['hallId']!;
+          return SelectTicketsScreen(hallId: hallId);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/billing-details',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return BillingDetailsScreen(bookingData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/payment-method',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return PaymentMethodScreen(billingData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/card-input',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return CardInputScreen(paymentData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/upi-sim',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return UpiSimScreen(paymentData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/success',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return SuccessScreen(bookingData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/failed',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return FailedScreen(bookingData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/checkout/receipt/:bookingId',
+        builder: (context, state) {
+          final bookingId = state.pathParameters['bookingId']!;
+          final extra = state.extra as Map<String, dynamic>?;
+          return ReceiptScreen(bookingId: bookingId, bookingData: extra);
+        },
+      ),
+      GoRoute(
+        path: '/organizer/analytics',
+        builder: (context, state) => const OrganizerAnalyticsScreen(),
+      ),
+      GoRoute(
+        path: '/organizer/attendees/:hallId',
+        builder: (context, state) {
+          final hallId = state.pathParameters['hallId']!;
+          return OrganizerAttendeesScreen(hallId: hallId);
+        },
+      ),
+      GoRoute(
+        path: '/organizer/checkin/:hallId',
+        builder: (context, state) {
+          final hallId = state.pathParameters['hallId']!;
+          return OrganizerCheckInScreen(hallId: hallId);
+        },
+      ),
+      GoRoute(
+        path: '/organizer/promocodes',
+        builder: (context, state) => const OrganizerPromoCodesScreen(),
+      ),
+      GoRoute(
+        path: '/social/chat/:hallId',
+        builder: (context, state) {
+          final hallId = state.pathParameters['hallId']!;
+          return SocialChatScreen(hallId: hallId);
+        },
+      ),
+      GoRoute(
+        path: '/ticket/refund/:bookingId',
+        builder: (context, state) {
+          final bookingId = state.pathParameters['bookingId']!;
+          return TicketRefundScreen(bookingId: bookingId);
+        },
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
