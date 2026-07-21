@@ -11,6 +11,7 @@ import {
   FlatList,
   Platform,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -254,35 +255,70 @@ export default function HomeScreen() {
             </TouchableOpacity>
 
             {/* Premium Features Quick Navigation Bar */}
-            <View style={{ flexDirection: 'row', gap: 8, marginVertical: Theme.spacing.sm }}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, marginVertical: Theme.spacing.sm }}>
               <TouchableOpacity
-                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(124, 58, 237, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#7C3AED', alignItems: 'center' }}
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(124, 58, 237, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#7C3AED', alignItems: 'center' }}
                 onPress={() => router.push('/ticket/ar-pass')}
               >
                 <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#7C3AED' }}>💎 3D VIP Pass</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(37, 99, 235, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#2563EB', alignItems: 'center' }}
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(37, 99, 235, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#2563EB', alignItems: 'center' }}
                 onPress={() => router.push('/checkout/seat-selection')}
               >
                 <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#2563EB' }}>💺 Seat Picker</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#10B981', alignItems: 'center' }}
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#10B981', alignItems: 'center' }}
                 onPress={() => router.push('/checkout/razorpay')}
               >
                 <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#10B981' }}>💳 Razorpay Pro</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{ flex: 1, padding: 10, backgroundColor: 'rgba(245, 158, 11, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#F59E0B', alignItems: 'center' }}
-                onPress={() => router.push('/organizer/budget-calculator')}
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(245, 158, 11, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#F59E0B', alignItems: 'center' }}
+                onPress={() => router.push('/social/rewards')}
               >
-                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#F59E0B' }}>💰 Budget Calc</Text>
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#F59E0B' }}>🏆 Rewards Hub</Text>
               </TouchableOpacity>
-            </View>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(236, 72, 153, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#EC4899', alignItems: 'center' }}
+                onPress={() => router.push('/social/memory-wall')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#EC4899' }}>📸 Memory Wall</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(56, 189, 248, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#38BDF8', alignItems: 'center' }}
+                onPress={() => router.push('/event/music-player')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#38BDF8' }}>🎧 Music Player</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#10B981', alignItems: 'center' }}
+                onPress={() => router.push('/checkout/rideshare')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#10B981' }}>🚘 Cab Partner</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(245, 158, 11, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#F59E0B', alignItems: 'center' }}
+                onPress={() => router.push('/checkout/hotels')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#F59E0B' }}>🏨 Hotel Finder</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ paddingHorizontal: 12, paddingVertical: 8, backgroundColor: 'rgba(239, 68, 68, 0.12)', borderRadius: 10, borderWidth: 1, borderColor: '#EF4444', alignItems: 'center' }}
+                onPress={() => router.push('/event/sos-safety')}
+              >
+                <Text style={{ fontSize: 11, fontFamily: Theme.fonts.bold, color: '#EF4444' }}>🚨 SOS Desk</Text>
+              </TouchableOpacity>
+            </ScrollView>
 
             {/* Search Bar */}
             <GlassView style={styles.searchBarContainer} intensity="medium">
