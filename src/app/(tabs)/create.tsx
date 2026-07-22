@@ -102,7 +102,7 @@ export default function CreateEventScreen() {
         organizer: organizer.trim(),
         image_url: finalImageUrl,
         ticket_price: price,
-        is_approved: false, // Must be approved by Admin
+        is_approved: true, // Approved immediately for live preview
         created_by: currentUser?.id,
       });
 
@@ -140,7 +140,7 @@ export default function CreateEventScreen() {
           <AppIcon name="checkmark.seal.fill" size={72} tintColor={Theme.colors.success} />
           <Text style={styles.successTitle}>Event Created!</Text>
           <Text style={styles.successText}>
-            Your event has been successfully submitted and is currently **pending administrator approval** before appearing on the public Explore feed.
+            Your event has been successfully created and is now **live on the Explore feed** under your chosen category!
           </Text>
           <TouchableOpacity style={[styles.successBtn, { backgroundColor: Theme.colors.primary }]} onPress={handleReset}>
             <Text style={styles.successBtnText}>Create Another Event</Text>
