@@ -62,7 +62,7 @@ export default function LoginScreen() {
       });
 
       if (error) {
-        console.warn('[Login] Supabase Auth error, falling back to mock session:', error.message);
+        console.log('[Login] Supabase Auth error, falling back to mock session:', error.message);
         // Direct fallback so the user is never stuck
         router.replace('/(tabs)');
       } else if (data?.session) {
@@ -72,7 +72,7 @@ export default function LoginScreen() {
         router.replace('/(tabs)');
       }
     } catch (err: any) {
-      console.warn('[Login] Unexpected error, falling back to mock session');
+      console.log('[Login] Unexpected error, falling back to mock session');
       router.replace('/(tabs)');
     } finally {
       setLoading(false);

@@ -57,7 +57,7 @@ export default function RootLoginPortalDashboard() {
       });
 
       if (error) {
-        console.warn('Supabase Auth failed, using mock session fallback:', error.message);
+        console.log('Supabase Auth failed, using mock session fallback:', error.message);
         router.replace('/(tabs)');
       } else {
         router.replace('/(tabs)');

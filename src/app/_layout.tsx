@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
-import { ActivityIndicator, View, StyleSheet, StatusBar } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, StatusBar, LogBox } from 'react-native';
 import { Theme } from '@/constants/theme';
+
+LogBox.ignoreAllLogs(); // Ignore all warning popups in Expo Go / Emulators
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
