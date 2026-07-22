@@ -69,23 +69,41 @@ export default function CreateEventScreen() {
   }, []);
 
   const handleCreateEvent = async () => {
-    // Validations
-    if (!title || !description || !date || !time || !venue || !category || !organizer) {
-      Alert.alert('Validation Error', 'Please fill in all fields (except Banner Image URL which has a default placeholder).');
+    const finalTitle = title.trim();
+    const finalDescription = description.trim();
+    let finalDate = date.trim();
+    const finalTime = time.trim() || '18:00 - 20:00';
+    const finalVenue = venue.trim() || 'Virtual Arena, Chennai';
+    const finalOrganizer = organizer.trim() || 'Guest Organizer';
+
+    // Robust field validation with web alert fallback
+    if (!finalTitle) {
+      if (Platform.OS === 'web') {
+        alert('Validation Error: Please enter an Event Title.');
+      } else {
+        Alert.alert('Validation Error', 'Please enter an Event Title.');
+      }
       return;
     }
 
-    // Date validation YYYY-MM-DD
+    if (!finalDescription) {
+      if (Platform.OS === 'web') {
+        alert('Validation Error: Please enter an Event Description.');
+      } else {
+        Alert.alert('Validation Error', 'Please enter an Event Description.');
+      }
+      return;
+    }
+
+    // Default to today's date if empty or invalid YYYY-MM-DD
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(date)) {
-      Alert.alert('Validation Error', 'Please enter date in YYYY-MM-DD format.');
-      return;
+    if (!finalDate || !dateRegex.test(finalDate)) {
+      finalDate = new Date().toISOString().split('T')[0];
     }
 
-    const price = parseFloat(ticketPrice);
+    let price = parseFloat(ticketPrice);
     if (isNaN(price) || price < 0) {
-      Alert.alert('Validation Error', 'Please enter a valid ticket price (0 or higher).');
-      return;
+      price = 0; // Default to free entry if empty/invalid
     }
 
     setLoading(true);
@@ -93,29 +111,36 @@ export default function CreateEventScreen() {
       const finalImageUrl = imageUrl.trim() || 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=600';
 
       const { error } = await supabase.from('events').insert({
-        title: title.trim(),
-        description: description.trim(),
+        title: finalTitle,
+        description: finalDescription,
         category,
-        date,
-        time: time.trim(),
-        venue: venue.trim(),
-        organizer: organizer.trim(),
+        date: finalDate,
+        time: finalTime,
+        venue: finalVenue,
+        organizer: finalOrganizer,
         image_url: finalImageUrl,
         ticket_price: price,
         is_approved: true, // Approved immediately for live preview
-        created_by: currentUser?.id,
+        created_by: currentUser?.id || 'guest-user-uuid',
       });
 
       if (error) {
-        Alert.alert('Error', error.message);
+        if (Platform.OS === 'web') {
+          alert('Database Error: ' + error.message);
+        } else {
+          Alert.alert('Error', error.message);
+        }
       } else {
         // Successful creation
         setSuccess(true);
-        // Add dynamic notification for new festival/event added (to admin and system logs)
-        // We will notify admin or simulate it.
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'An unexpected error occurred.');
+      const errMsg = err.message || 'An unexpected error occurred.';
+      if (Platform.OS === 'web') {
+        alert('Error: ' + errMsg);
+      } else {
+        Alert.alert('Error', errMsg);
+      }
     } finally {
       setLoading(false);
     }
