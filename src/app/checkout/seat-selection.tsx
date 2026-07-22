@@ -12,13 +12,12 @@ import { Theme } from '@/constants/theme';
 import { GlassView } from '@/components/GlassView';
 import { AppIcon } from '@/components/AppIcon';
 
-interface SeatTier {
+interface Seat {
   id: string;
-  name: string;
+  row: string;
+  number: string;
+  type: 'vip' | 'gold' | 'general';
   price: number;
-  perks: string;
-  badgeColor: string;
-  available: number;
 }
 
 export default function StageSeatPickerScreen() {
@@ -27,15 +26,50 @@ export default function StageSeatPickerScreen() {
 
   const eventTitle = (params.eventTitle as string) || 'Neon Beats Music Festival';
 
-  const tiers: SeatTier[] = [
-    { id: 'vip', name: 'Front Stage VIP Lounge', price: 5000, perks: 'Free Cocktails & Priority Meet & Greet', badgeColor: '#F59E0B', available: 14 },
-    { id: 'gold', name: 'Golden Circle Stand', price: 3500, perks: 'Closest Center Stage Standing View', badgeColor: '#38BDF8', available: 32 },
-    { id: 'exec', name: 'Executive Terrace Seating', price: 2500, perks: 'Elevated Covered Seating & Lounge Access', badgeColor: '#8B5CF6', available: 65 },
-    { id: 'gen', name: 'General Arena Entry', price: 1500, perks: 'Standard Festival Arena Access', badgeColor: '#10B981', available: 120 },
+  // Seed list of booked/occupied seats for realism
+  const bookedSeats = [
+    'A-03', 'A-05', 'B-04', 'C-02', 'C-07', 'D-05', 'E-03', 'E-09', 'F-06', 'F-11'
   ];
 
-  const [selectedTier, setSelectedTier] = useState<SeatTier>(tiers[0]);
+  // Grid Configuration
+  const rows = [
+    { name: 'A', type: 'vip', seatsCount: 8, price: 5000 },
+    { name: 'B', type: 'vip', seatsCount: 8, price: 5000 },
+    { name: 'C', type: 'gold', seatsCount: 10, price: 3500 },
+    { name: 'D', type: 'gold', seatsCount: 10, price: 3500 },
+    { name: 'E', type: 'general', seatsCount: 12, price: 1500 },
+    { name: 'F', type: 'general', seatsCount: 12, price: 1500 },
+  ];
+
   const [selectedSeatNo, setSelectedSeatNo] = useState('A-07');
+  const [selectedPrice, setSelectedPrice] = useState(5000);
+  const [selectedTierName, setSelectedTierName] = useState('Front Stage VIP Lounge');
+
+  const handleSelectSeat = (seatId: string, type: string, price: number) => {
+    if (bookedSeats.includes(seatId)) return; // Don't allow booking occupied seats
+
+    setSelectedSeatNo(seatId);
+    setSelectedPrice(price);
+    
+    // Set appropriate display tier name
+    const tier = type === 'vip' ? 'Front Stage VIP Lounge'
+               : type === 'gold' ? 'Golden Circle Stand'
+               : 'General Arena Entry';
+    setSelectedTierName(tier);
+  };
+
+  const getSeatColor = (seatId: string, type: 'vip' | 'gold' | 'general') => {
+    if (selectedSeatNo === seatId) {
+      return '#8B5CF6'; // Selected: Violet
+    }
+    if (bookedSeats.includes(seatId)) {
+      return '#EF4444'; // Booked/Occupied: Red
+    }
+    // Color code based on tier
+    if (type === 'vip') return '#F59E0B'; // VIP: Gold/Amber
+    if (type === 'gold') return '#06B6D4'; // Gold: Cyan
+    return '#10B981'; // General: Green
+  };
 
   return (
     <View style={styles.container}>
@@ -47,7 +81,7 @@ export default function StageSeatPickerScreen() {
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <AppIcon name="chevron.left" size={20} tintColor="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Interactive Stage Seat Picker</Text>
+        <Text style={styles.headerTitle}>Interactive Seating Chart</Text>
         <View style={{ width: 28 }} />
       </View>
 
@@ -59,52 +93,96 @@ export default function StageSeatPickerScreen() {
           </View>
         </View>
 
-        {/* Visual Seat Grid */}
-        <View style={styles.gridCard}>
-          <Text style={styles.gridTitle}>Stage Seat Map (Section A)</Text>
-          <View style={styles.seatsRow}>
-            {['A-01', 'A-02', 'A-03', 'A-04', 'A-05', 'A-06', 'A-07', 'A-08'].map((seatId) => (
-              <TouchableOpacity
-                key={seatId}
-                style={[
-                  styles.seatBtn,
-                  selectedSeatNo === seatId && { backgroundColor: selectedTier.badgeColor, borderColor: '#FFFFFF' }
-                ]}
-                onPress={() => setSelectedSeatNo(seatId)}
-              >
-                <Text style={styles.seatText}>{seatId}</Text>
-              </TouchableOpacity>
-            ))}
+        {/* Legend Key */}
+        <GlassView style={styles.legendCard} intensity="low">
+          <Text style={styles.legendTitle}>Seating Categories Key</Text>
+          <View style={styles.legendGrid}>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#F59E0B' }]} />
+              <Text style={styles.legendText}>VIP Rows A-B (₹5,000)</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#06B6D4' }]} />
+              <Text style={styles.legendText}>Gold Rows C-D (₹3,500)</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#10B981' }]} />
+              <Text style={styles.legendText}>General Rows E-F (₹1,500)</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#EF4444' }]} />
+              <Text style={styles.legendText}>Booked / Occupied</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#8B5CF6' }]} />
+              <Text style={styles.legendText}>Your Selection</Text>
+            </View>
           </View>
-        </View>
+        </GlassView>
 
-        {/* Tier Selector List */}
-        <Text style={styles.sectionHeader}>Select Tier Category</Text>
+        {/* Theater Seat Grid Container */}
+        <GlassView style={styles.gridCard} intensity="high">
+          <Text style={styles.gridTitle}>Select Your Seat</Text>
+          
+          <View style={styles.rowsContainer}>
+            {rows.map((row) => {
+              const seatArray = Array.from({ length: row.seatsCount }, (_, index) => {
+                const seatNumber = (index + 1).toString().padStart(2, '0');
+                return `${row.name}-${seatNumber}`;
+              });
 
-        <View style={styles.tierList}>
-          {tiers.map((t) => {
-            const isSelected = selectedTier.id === t.id;
-            return (
-              <TouchableOpacity
-                key={t.id}
-                style={[styles.tierCard, isSelected && { borderColor: t.badgeColor, borderWidth: 2 }]}
-                onPress={() => setSelectedTier(t)}
-              >
-                <GlassView style={styles.tierInner} intensity="high">
-                  <View style={styles.tierHeader}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <View style={[styles.colorDot, { backgroundColor: t.badgeColor }]} />
-                      <Text style={styles.tierName}>{t.name}</Text>
-                    </View>
-                    <Text style={styles.tierPrice}>₹{t.price}</Text>
+              return (
+                <View key={row.name} style={styles.rowWrapper}>
+                  {/* Row Identifier prefix */}
+                  <View style={styles.rowLabelContainer}>
+                    <Text style={styles.rowLabelText}>{row.name}</Text>
                   </View>
-                  <Text style={styles.tierPerks}>{t.perks}</Text>
-                  <Text style={styles.tierAvail}>{t.available} seats left in this tier</Text>
-                </GlassView>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+
+                  {/* Row Seats list */}
+                  <View style={styles.rowSeats}>
+                    {seatArray.map((seatId) => {
+                      const isBooked = bookedSeats.includes(seatId);
+                      const isSelected = selectedSeatNo === seatId;
+                      const seatColor = getSeatColor(seatId, row.type as any);
+
+                      return (
+                        <TouchableOpacity
+                          key={seatId}
+                          style={[
+                            styles.seatBtn,
+                            { backgroundColor: seatColor },
+                            isSelected && { borderColor: '#FFFFFF', borderWidth: 2 }
+                          ]}
+                          onPress={() => handleSelectSeat(seatId, row.type, row.price)}
+                          disabled={isBooked}
+                        >
+                          <Text style={styles.seatText}>
+                            {seatId.split('-')[1]}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        </GlassView>
+
+        {/* Selected Seat Checkout Summary Card */}
+        <GlassView style={styles.detailsSummaryCard} intensity="medium">
+          <View style={styles.detailsHeader}>
+            <View>
+              <Text style={styles.summaryLabel}>SELECTED SEAT</Text>
+              <Text style={styles.summarySeatVal}>{selectedSeatNo}</Text>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.summaryLabel}>TIER / PRICE</Text>
+              <Text style={styles.summaryPriceVal}>₹{selectedPrice}</Text>
+            </View>
+          </View>
+          <Text style={styles.summaryTierText}>{selectedTierName}</Text>
+        </GlassView>
 
         {/* Proceed to Razorpay Payment */}
         <TouchableOpacity
@@ -113,12 +191,14 @@ export default function StageSeatPickerScreen() {
             pathname: '/checkout/razorpay',
             params: {
               eventTitle,
-              price: selectedTier.price.toString(),
+              price: selectedPrice.toString(),
               quantity: '1',
+              tierName: selectedTierName,
+              seatNo: selectedSeatNo,
             }
           } as any)}
         >
-          <Text style={styles.proceedBtnText}>Confirm Seat {selectedSeatNo} • Pay ₹{selectedTier.price} via Razorpay</Text>
+          <Text style={styles.proceedBtnText}>Confirm Seat {selectedSeatNo} • Pay ₹{selectedPrice} via Razorpay</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -192,25 +272,62 @@ const styles = StyleSheet.create({
   stageArch: {
     width: '100%',
     height: 48,
-    backgroundColor: '#1C2541',
+    backgroundColor: '#1E293B',
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#3A506B',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   stageText: {
     fontSize: 13,
     fontFamily: Theme.fonts.bold,
-    color: '#6FFFE9',
+    color: '#38BDF8',
     letterSpacing: 1,
   },
+  legendCard: {
+    padding: Theme.spacing.md,
+    borderRadius: Theme.borderRadius.md,
+    marginBottom: Theme.spacing.lg,
+    backgroundColor: 'rgba(30, 41, 59, 0.4)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  legendTitle: {
+    fontSize: 12,
+    fontFamily: Theme.fonts.bold,
+    color: '#FFFFFF',
+    marginBottom: Theme.spacing.sm,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  legendGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    minWidth: '45%',
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  legendText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontFamily: Theme.fonts.medium,
+  },
   gridCard: {
-    backgroundColor: '#1C2541',
-    padding: Theme.spacing.lg,
+    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    padding: Theme.spacing.md,
     borderRadius: Theme.borderRadius.lg,
-    marginBottom: Theme.spacing.xl,
+    marginBottom: Theme.spacing.lg,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
@@ -219,76 +336,79 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fonts.bold,
     color: '#FFFFFF',
     marginBottom: Theme.spacing.md,
+    textTransform: 'uppercase',
   },
-  seatsRow: {
+  rowsContainer: {
+    gap: Theme.spacing.md,
+  },
+  rowWrapper: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    justifyContent: 'center',
-  },
-  seatBtn: {
-    width: 60,
-    height: 36,
-    backgroundColor: '#0B132B',
-    borderRadius: 8,
-    justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#3A506B',
+    gap: 8,
   },
-  seatText: {
-    fontSize: 11,
-    fontFamily: Theme.fonts.bold,
-    color: '#FFFFFF',
+  rowLabelContainer: {
+    width: 20,
+    alignItems: 'center',
   },
-  sectionHeader: {
+  rowLabelText: {
+    color: '#94A3B8',
     fontSize: 14,
     fontFamily: Theme.fonts.bold,
+  },
+  rowSeats: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  seatBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  seatText: {
+    fontSize: 10,
+    fontFamily: Theme.fonts.bold,
     color: '#FFFFFF',
-    marginBottom: Theme.spacing.sm,
   },
-  tierList: {
-    gap: Theme.spacing.md,
-    marginBottom: Theme.spacing.xl,
-  },
-  tierCard: {
-    borderRadius: Theme.borderRadius.lg,
-    overflow: 'hidden',
-  },
-  tierInner: {
+  detailsSummaryCard: {
     padding: Theme.spacing.md,
-    backgroundColor: '#1C2541',
+    borderRadius: Theme.borderRadius.md,
+    marginBottom: Theme.spacing.xl,
+    backgroundColor: 'rgba(30, 41, 59, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
-  tierHeader: {
+  detailsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  colorDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+  summaryLabel: {
+    fontSize: 9,
+    fontFamily: Theme.fonts.bold,
+    color: '#94A3B8',
+    letterSpacing: 1,
   },
-  tierName: {
-    fontSize: 15,
+  summarySeatVal: {
+    fontSize: 22,
     fontFamily: Theme.fonts.bold,
     color: '#FFFFFF',
+    marginTop: 2,
   },
-  tierPrice: {
-    fontSize: 18,
+  summaryPriceVal: {
+    fontSize: 22,
     fontFamily: Theme.fonts.bold,
-    color: '#6FFFE9',
+    color: '#38BDF8',
+    marginTop: 2,
   },
-  tierPerks: {
+  summaryTierText: {
     fontSize: 12,
-    color: '#94A3B8',
-    marginTop: 4,
-  },
-  tierAvail: {
-    fontSize: 10,
-    color: '#F59E0B',
-    marginTop: 6,
+    color: '#10B981',
     fontFamily: Theme.fonts.medium,
+    marginTop: 6,
   },
   proceedBtn: {
     height: 52,
