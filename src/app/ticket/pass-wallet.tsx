@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { Theme } from '@/constants/theme';
 import { GlassView } from '@/components/GlassView';
 import { AppIcon } from '@/components/AppIcon';
+import { Image } from 'expo-image';
 
 export default function PassWalletScreen() {
   const router = useRouter();
@@ -39,6 +40,9 @@ export default function PassWalletScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backgroundAccent1} />
+      <View style={styles.backgroundAccent2} />
+
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <AppIcon name="chevron.left" size={20} tintColor={Theme.colors.text} />
@@ -102,6 +106,47 @@ export default function PassWalletScreen() {
             </View>
           </View>
 
+          {/* Selected Seat Details & 3 Rows of VIP Seat Images */}
+          {tier === 'VIP' && (
+            <View style={styles.seatDetailsContainer}>
+              <View style={styles.seatBadge}>
+                <AppIcon name="ticket.fill" size={14} tintColor="#FFFFFF" />
+                <Text style={styles.seatBadgeText}>ASSIGNED SEAT: Row A - Seat 07</Text>
+              </View>
+
+              <Text style={styles.seatsTitle}>📷 Assigned VIP Row Seats Preview:</Text>
+              
+              <View style={styles.seatsRowsContainer}>
+                <View style={styles.seatRowItem}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=300' }}
+                    style={styles.seatRowImage}
+                    contentFit="cover"
+                  />
+                  <Text style={styles.seatRowLabel}>Row A (Lounge)</Text>
+                </View>
+
+                <View style={styles.seatRowItem}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=300' }}
+                    style={styles.seatRowImage}
+                    contentFit="cover"
+                  />
+                  <Text style={styles.seatRowLabel}>Row B (Premium)</Text>
+                </View>
+
+                <View style={styles.seatRowItem}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1585699324551-f6c309eed262?auto=format&fit=crop&q=80&w=300' }}
+                    style={styles.seatRowImage}
+                    contentFit="cover"
+                  />
+                  <Text style={styles.seatRowLabel}>Row C (Balcony)</Text>
+                </View>
+              </View>
+            </View>
+          )}
+
           {/* Simulated Gate QR Code */}
           <View style={styles.qrSection}>
             <View style={styles.qrFrame}>
@@ -139,7 +184,90 @@ export default function PassWalletScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
+    backgroundColor: '#070B19',
+    ...Platform.select({
+      web: {
+        maxWidth: 1400,
+        alignSelf: 'center',
+        width: '100%',
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+      } as any,
+    }),
+  },
+  backgroundAccent1: {
+    position: 'absolute',
+    top: -50,
+    right: -100,
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    backgroundColor: 'rgba(124, 58, 237, 0.25)',
+    filter: Platform.OS === 'web' ? 'blur(90px)' : undefined,
+    zIndex: -1,
+  },
+  backgroundAccent2: {
+    position: 'absolute',
+    bottom: 80,
+    left: -100,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    backgroundColor: 'rgba(6, 182, 212, 0.20)',
+    filter: Platform.OS === 'web' ? 'blur(100px)' : undefined,
+    zIndex: -1,
+  },
+  seatDetailsContainer: {
+    marginVertical: Theme.spacing.md,
+    alignItems: 'center',
+    width: '100%',
+  },
+  seatBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#D97706',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginBottom: Theme.spacing.sm,
+  },
+  seatBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: Theme.fonts.bold,
+  },
+  seatsTitle: {
+    fontSize: 11,
+    color: Theme.colors.textMuted,
+    fontFamily: Theme.fonts.bold,
+    marginBottom: Theme.spacing.xs,
+    alignSelf: 'flex-start',
+  },
+  seatsRowsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 8,
+    marginTop: 4,
+  },
+  seatRowItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  seatRowImage: {
+    width: '100%',
+    height: 70,
+    borderRadius: Theme.borderRadius.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  seatRowLabel: {
+    fontSize: 9,
+    color: Theme.colors.textSecondary,
+    fontFamily: Theme.fonts.medium,
+    marginTop: 4,
   },
   header: {
     flexDirection: 'row',
