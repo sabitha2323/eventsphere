@@ -465,95 +465,97 @@ export default function EventDetailsScreen() {
               </View>
 
               {/* Featured Event Songs & Audio Playlist */}
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>🎵 Featured Event Songs & Live Playlist</Text>
-                <GlassView style={{ padding: Theme.spacing.md, borderRadius: Theme.borderRadius.md, backgroundColor: 'rgba(15, 23, 42, 0.04)', borderWidth: 1, borderColor: 'rgba(124, 58, 237, 0.15)' }} intensity="high">
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                    <View style={{ flex: 1, paddingRight: 10 }}>
-                      <Text style={{ fontSize: 10, fontFamily: Theme.fonts.bold, color: Theme.colors.primary, letterSpacing: 0.5 }}>NOW PLAYING STREAMING</Text>
-                      <Text style={{ fontSize: 14, fontFamily: Theme.fonts.bold, color: Theme.colors.text, marginTop: 2 }}>{currentTrackTitle}</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' }}
-                      onPress={() => {
-                        const activeTrack = [
-                          { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-                          { title: 'Headliner Live Stage Anthem - DJ Alok', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-                          { title: 'Acoustic Sunset Vocal Live (VIP Cut)', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-                          { title: 'Cyber Symphony EDM Remix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' }
-                        ].find(t => t.title === currentTrackTitle) || { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' };
-
-                        if (Platform.OS === 'web') {
-                          try {
-                            if (audioInstance) {
-                              if (isPlayingTrack) {
-                                audioInstance.pause();
-                                setIsPlayingTrack(false);
-                              } else {
-                                audioInstance.play().catch((e: any) => console.log(e));
-                                setIsPlayingTrack(true);
-                              }
-                            } else {
-                              const newAudio = new (window as any).Audio(activeTrack.url);
-                              newAudio.play().catch((e: any) => console.log(e));
-                              setAudioInstance(newAudio);
-                              setCurrentTrackTitle(activeTrack.title);
-                              setIsPlayingTrack(true);
-                            }
-                          } catch (e) {
-                            setIsPlayingTrack(!isPlayingTrack);
-                          }
-                        } else {
-                          setIsPlayingTrack(!isPlayingTrack);
-                        }
-                      }}
-                    >
-                      <AppIcon name={isPlayingTrack ? 'pause.fill' : 'play.fill'} size={20} tintColor="#FFFFFF" />
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Sample Track List */}
-                  <View style={{ gap: 8 }}>
-                    {[
-                      { title: `${event.title} Official Theme Song`, duration: '3:45', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-                      { title: 'Headliner Live Stage Anthem - DJ Alok', duration: '4:12', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-                      { title: 'Acoustic Sunset Vocal Live (VIP Cut)', duration: '3:50', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-                      { title: 'Cyber Symphony EDM Remix', duration: '5:05', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
-                    ].map((track, idx) => (
+              {(event.category === 'Music' || event.category === 'Culturals') && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>🎵 Featured Event Songs & Live Playlist</Text>
+                  <GlassView style={{ padding: Theme.spacing.md, borderRadius: Theme.borderRadius.md, backgroundColor: 'rgba(15, 23, 42, 0.04)', borderWidth: 1, borderColor: 'rgba(124, 58, 237, 0.15)' }} intensity="high">
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <View style={{ flex: 1, paddingRight: 10 }}>
+                        <Text style={{ fontSize: 10, fontFamily: Theme.fonts.bold, color: Theme.colors.primary, letterSpacing: 0.5 }}>NOW PLAYING STREAMING</Text>
+                        <Text style={{ fontSize: 14, fontFamily: Theme.fonts.bold, color: Theme.colors.text, marginTop: 2 }}>{currentTrackTitle}</Text>
+                      </View>
                       <TouchableOpacity
-                        key={idx}
-                        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: currentTrackTitle === track.title ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.5)', borderRadius: 8, borderWidth: 1, borderColor: currentTrackTitle === track.title ? Theme.colors.primary : 'rgba(15, 23, 42, 0.05)' }}
+                        style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' }}
                         onPress={() => {
+                          const activeTrack = [
+                            { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+                            { title: 'Headliner Live Stage Anthem - DJ Alok', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+                            { title: 'Acoustic Sunset Vocal Live (VIP Cut)', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+                            { title: 'Cyber Symphony EDM Remix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' }
+                          ].find(t => t.title === currentTrackTitle) || { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' };
+
                           if (Platform.OS === 'web') {
                             try {
                               if (audioInstance) {
-                                audioInstance.pause();
+                                if (isPlayingTrack) {
+                                  audioInstance.pause();
+                                  setIsPlayingTrack(false);
+                                } else {
+                                  audioInstance.play().catch((e: any) => console.log(e));
+                                  setIsPlayingTrack(true);
+                                }
+                              } else {
+                                const newAudio = new (window as any).Audio(activeTrack.url);
+                                newAudio.play().catch((e: any) => console.log(e));
+                                setAudioInstance(newAudio);
+                                setCurrentTrackTitle(activeTrack.title);
+                                setIsPlayingTrack(true);
                               }
-                              const newAudio = new (window as any).Audio(track.url);
-                              newAudio.play().catch((e: any) => console.log(e));
-                              setAudioInstance(newAudio);
-                              setCurrentTrackTitle(track.title);
-                              setIsPlayingTrack(true);
                             } catch (e) {
-                              setCurrentTrackTitle(track.title);
-                              setIsPlayingTrack(true);
+                              setIsPlayingTrack(!isPlayingTrack);
                             }
                           } else {
-                            setCurrentTrackTitle(track.title);
-                            setIsPlayingTrack(true);
+                            setIsPlayingTrack(!isPlayingTrack);
                           }
                         }}
                       >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                          <AppIcon name="music.note" size={14} tintColor={Theme.colors.primary} />
-                          <Text style={{ fontSize: 12, fontFamily: Theme.fonts.bold, color: Theme.colors.text }}>{track.title}</Text>
-                        </View>
-                        <Text style={{ fontSize: 11, color: Theme.colors.textMuted, fontFamily: Theme.fonts.medium }}>{track.duration}</Text>
+                        <AppIcon name={isPlayingTrack ? 'pause.fill' : 'play.fill'} size={20} tintColor="#FFFFFF" />
                       </TouchableOpacity>
-                    ))}
-                  </View>
-                </GlassView>
-              </View>
+                    </View>
+
+                    {/* Sample Track List */}
+                    <View style={{ gap: 8 }}>
+                      {[
+                        { title: `${event.title} Official Theme Song`, duration: '3:45', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+                        { title: 'Headliner Live Stage Anthem - DJ Alok', duration: '4:12', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+                        { title: 'Acoustic Sunset Vocal Live (VIP Cut)', duration: '3:50', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+                        { title: 'Cyber Symphony EDM Remix', duration: '5:05', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+                      ].map((track, idx) => (
+                        <TouchableOpacity
+                          key={idx}
+                          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: currentTrackTitle === track.title ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.5)', borderRadius: 8, borderWidth: 1, borderColor: currentTrackTitle === track.title ? Theme.colors.primary : 'rgba(15, 23, 42, 0.05)' }}
+                          onPress={() => {
+                            if (Platform.OS === 'web') {
+                              try {
+                                if (audioInstance) {
+                                  audioInstance.pause();
+                                }
+                                const newAudio = new (window as any).Audio(track.url);
+                                newAudio.play().catch((e: any) => console.log(e));
+                                setAudioInstance(newAudio);
+                                setCurrentTrackTitle(track.title);
+                                setIsPlayingTrack(true);
+                              } catch (e) {
+                                setCurrentTrackTitle(track.title);
+                                setIsPlayingTrack(true);
+                              }
+                            } else {
+                              setCurrentTrackTitle(track.title);
+                              setIsPlayingTrack(true);
+                            }
+                          }}
+                        >
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                            <AppIcon name="music.note" size={14} tintColor={Theme.colors.primary} />
+                            <Text style={{ fontSize: 12, fontFamily: Theme.fonts.bold, color: Theme.colors.text }}>{track.title}</Text>
+                          </View>
+                          <Text style={{ fontSize: 11, color: Theme.colors.textMuted, fontFamily: Theme.fonts.medium }}>{track.duration}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </GlassView>
+                </View>
+              )}
 
               {/* Comments/Reviews Section */}
               <View style={styles.section}>

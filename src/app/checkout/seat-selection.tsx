@@ -39,6 +39,9 @@ export default function StageSeatPickerScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backgroundAccent1} />
+      <View style={styles.backgroundAccent2} />
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -125,10 +128,10 @@ export default function StageSeatPickerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B132B',
+    backgroundColor: '#070B19',
     ...Platform.select({
       web: {
-        maxWidth: 800,
+        maxWidth: 1400,
         alignSelf: 'center',
         width: '100%',
         borderColor: 'rgba(255, 255, 255, 0.08)',
@@ -136,6 +139,28 @@ const styles = StyleSheet.create({
         borderRightWidth: 1,
       } as any,
     }),
+  },
+  backgroundAccent1: {
+    position: 'absolute',
+    top: -50,
+    right: -100,
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    backgroundColor: 'rgba(124, 58, 237, 0.25)',
+    filter: Platform.OS === 'web' ? 'blur(90px)' : undefined,
+    zIndex: -1,
+  },
+  backgroundAccent2: {
+    position: 'absolute',
+    bottom: 80,
+    left: -100,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    backgroundColor: 'rgba(6, 182, 212, 0.20)',
+    filter: Platform.OS === 'web' ? 'blur(100px)' : undefined,
+    zIndex: -1,
   },
   header: {
     paddingHorizontal: Theme.spacing.lg,
