@@ -57,6 +57,17 @@ export default function EventDetailsScreen() {
   // Music Audio Player State
   const [isPlayingTrack, setIsPlayingTrack] = useState(false);
   const [currentTrackTitle, setCurrentTrackTitle] = useState('Neon Beats Festival Anthem (Radio Edit)');
+  const [audioInstance, setAudioInstance] = useState<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioInstance) {
+        try {
+          audioInstance.pause();
+        } catch (e) {}
+      }
+    };
+  }, [audioInstance]);
 
   // New comment state
   const [rating, setRating] = useState(5);
@@ -333,290 +344,371 @@ export default function EventDetailsScreen() {
           <Text style={styles.title}>{event.title}</Text>
           <Text style={styles.organizerText}>Organized by {event.organizer}</Text>
 
-          {/* Event Quick Details Glass card */}
-          <GlassView style={styles.metaCard}>
-            <View style={styles.metaRow}>
-              <View style={styles.metaIcon}>
-                <AppIcon name="calendar" size={20} tintColor={Theme.colors.secondary} />
-              </View>
-              <View style={styles.metaInfo}>
-                <Text style={styles.metaLabel}>Date</Text>
-                <Text style={styles.metaValue}>{formatDate(event.date)}</Text>
-              </View>
-            </View>
-
-            <View style={styles.metaRow}>
-              <View style={styles.metaIcon}>
-                <AppIcon name="clock" size={20} tintColor={Theme.colors.secondary} />
-              </View>
-              <View style={styles.metaInfo}>
-                <Text style={styles.metaLabel}>Time</Text>
-                <Text style={styles.metaValue}>{event.time}</Text>
-              </View>
-            </View>
-
-            <View style={styles.metaRow}>
-              <View style={styles.metaIcon}>
-                <AppIcon name="mappin.and.ellipse" size={20} tintColor={Theme.colors.secondary} />
-              </View>
-              <View style={styles.metaInfo}>
-                <Text style={styles.metaLabel}>Venue</Text>
-                <Text style={styles.metaValue}>{event.venue}</Text>
-              </View>
-            </View>
-
-            <View style={[styles.metaRow, { borderBottomWidth: 0 }]}>
-              <View style={styles.metaIcon}>
-                <AppIcon name="ticket" size={20} tintColor={Theme.colors.secondary} />
-              </View>
-              <View style={styles.metaInfo}>
-                <Text style={styles.metaLabel}>Ticket Price</Text>
-                <Text style={styles.metaValue}>
-                  {event.ticket_price === 0 ? 'Free Entry' : `₹${event.ticket_price}`}
-                </Text>
-              </View>
-            </View>
-          </GlassView>
-
-          {/* Actions panel */}
-          <View style={styles.actionsPanel}>
-            <TouchableOpacity
-              style={[
-                styles.registerButton,
-                registered && styles.registeredButton,
-                !registered && { backgroundColor: Theme.colors.primary },
-              ]}
-              onPress={handleRegister}
-              disabled={regLoading}
-            >
-              {regLoading ? (
-                <ActivityIndicator color={Theme.colors.white} />
-              ) : (
-                <>
-                  <AppIcon
-                    name={registered ? 'checkmark.circle.fill' : 'ticket.fill'}
-                    size={18}
-                    tintColor={Theme.colors.white}
-                  />
-                  <Text style={styles.registerButtonText}>
-                    {registered ? 'Registered' : 'Register Now'}
-                  </Text>
-                </>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.subActionsRow}>
-              <TouchableOpacity style={styles.actionIconBtn} onPress={handleAddToCalendar}>
-                <AppIcon name="calendar.badge.plus" size={20} tintColor={Theme.colors.text} />
-                <Text style={styles.actionIconLabel}>Add Calendar</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.actionIconBtn} onPress={handleShare}>
-                <AppIcon name="square.and.arrow.up" size={20} tintColor={Theme.colors.text} />
-                <Text style={styles.actionIconLabel}>Share Event</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Description Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>About The Event</Text>
-            <Text style={styles.descriptionText}>{event.description}</Text>
-          </View>
-
-          {/* Featured Event Songs & Audio Playlist */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🎵 Featured Event Songs & Lineup Playlist</Text>
-            <GlassView style={{ padding: Theme.spacing.md, borderRadius: Theme.borderRadius.md, backgroundColor: 'rgba(15, 23, 42, 0.04)', borderWidth: 1, borderColor: 'rgba(124, 58, 237, 0.15)' }} intensity="high">
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <View style={{ flex: 1, paddingRight: 10 }}>
-                  <Text style={{ fontSize: 10, fontFamily: Theme.fonts.bold, color: Theme.colors.primary, letterSpacing: 0.5 }}>NOW PLAYING SAMPLE</Text>
-                  <Text style={{ fontSize: 14, fontFamily: Theme.fonts.bold, color: Theme.colors.text, marginTop: 2 }}>{currentTrackTitle}</Text>
-                </View>
-                <TouchableOpacity
-                  style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' }}
-                  onPress={() => setIsPlayingTrack(!isPlayingTrack)}
-                >
-                  <AppIcon name={isPlayingTrack ? 'pause.fill' : 'play.fill'} size={20} tintColor="#FFFFFF" />
-                </TouchableOpacity>
-              </View>
-
-              {/* Sample Track List */}
-              <View style={{ gap: 8 }}>
-                {[
-                  { title: `${event.title} Official Theme Song`, duration: '3:45' },
-                  { title: 'Headliner Live Stage Anthem - DJ Alok', duration: '4:12' },
-                  { title: 'Acoustic Sunset Vocal Live (VIP Cut)', duration: '3:50' },
-                  { title: 'Cyber Symphony EDM Remix', duration: '5:05' },
-                ].map((track, idx) => (
-                  <TouchableOpacity
-                    key={idx}
-                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: currentTrackTitle === track.title ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.5)', borderRadius: 8, borderWidth: 1, borderColor: currentTrackTitle === track.title ? Theme.colors.primary : 'rgba(15, 23, 42, 0.05)' }}
-                    onPress={() => { setCurrentTrackTitle(track.title); setIsPlayingTrack(true); }}
-                  >
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <AppIcon name="music.note" size={14} tintColor={Theme.colors.primary} />
-                      <Text style={{ fontSize: 12, fontFamily: Theme.fonts.bold, color: Theme.colors.text }}>{track.title}</Text>
-                    </View>
-                    <Text style={{ fontSize: 11, color: Theme.colors.textMuted, fontFamily: Theme.fonts.medium }}>{track.duration}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </GlassView>
-          </View>
-
-          {/* Comments/Reviews Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Comments & Reviews</Text>
-
-            {/* Comment Form */}
-            {currentUser ? (
-              <GlassView style={styles.commentFormCard} intensity="low">
-                <Text style={styles.commentFormHeading}>Write a Review</Text>
-                
-                {/* Rating selection */}
-                <View style={styles.ratingSelectRow}>
-                  <Text style={styles.ratingSelectLabel}>Your Rating: </Text>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <TouchableOpacity key={star} onPress={() => setRating(star)}>
-                      <AppIcon
-                        name={star <= rating ? 'star.fill' : 'star'}
-                        size={24}
-                        tintColor={star <= rating ? Theme.colors.warning : Theme.colors.textMuted}
-                      />
-                    </TouchableOpacity>
-                  ))}
+          <View style={Platform.OS === 'web' ? { flexDirection: 'row', gap: 28, marginTop: Theme.spacing.md, alignItems: 'flex-start' } : undefined}>
+            {/* Left Column: Stats & Registration */}
+            <View style={Platform.OS === 'web' ? { flex: 1, minWidth: 320 } : undefined}>
+              {/* Event Quick Details Glass card */}
+              <GlassView style={styles.metaCard}>
+                <View style={styles.metaRow}>
+                  <View style={styles.metaIcon}>
+                    <AppIcon name="calendar" size={20} tintColor={Theme.colors.secondary} />
+                  </View>
+                  <View style={styles.metaInfo}>
+                    <Text style={styles.metaLabel}>Date</Text>
+                    <Text style={styles.metaValue}>{formatDate(event.date)}</Text>
+                  </View>
                 </View>
 
-                {/* Comment Text Input */}
-                <TextInput
-                  style={styles.commentInput}
-                  placeholder="Share your thoughts about this event..."
-                  placeholderTextColor={Theme.colors.textMuted}
-                  value={newCommentText}
-                  onChangeText={setNewCommentText}
-                  multiline
-                  numberOfLines={3}
-                  maxLength={500}
-                />
+                <View style={styles.metaRow}>
+                  <View style={styles.metaIcon}>
+                    <AppIcon name="clock" size={20} tintColor={Theme.colors.secondary} />
+                  </View>
+                  <View style={styles.metaInfo}>
+                    <Text style={styles.metaLabel}>Time</Text>
+                    <Text style={styles.metaValue}>{event.time}</Text>
+                  </View>
+                </View>
 
+                <View style={styles.metaRow}>
+                  <View style={styles.metaIcon}>
+                    <AppIcon name="mappin.and.ellipse" size={20} tintColor={Theme.colors.secondary} />
+                  </View>
+                  <View style={styles.metaInfo}>
+                    <Text style={styles.metaLabel}>Venue</Text>
+                    <Text style={styles.metaValue}>{event.venue}</Text>
+                  </View>
+                </View>
+
+                <View style={[styles.metaRow, { borderBottomWidth: 0 }]}>
+                  <View style={styles.metaIcon}>
+                    <AppIcon name="ticket" size={20} tintColor={Theme.colors.secondary} />
+                  </View>
+                  <View style={styles.metaInfo}>
+                    <Text style={styles.metaLabel}>Ticket Price</Text>
+                    <Text style={styles.metaValue}>
+                      {event.ticket_price === 0 ? 'Free Entry' : `₹${event.ticket_price}`}
+                    </Text>
+                  </View>
+                </View>
+              </GlassView>
+
+              {/* Actions panel */}
+              <View style={styles.actionsPanel}>
                 <TouchableOpacity
-                  style={[styles.submitCommentBtn, { backgroundColor: Theme.colors.primary }]}
-                  onPress={submitComment}
-                  disabled={submittingComment}
+                  style={[
+                    styles.registerButton,
+                    registered && styles.registeredButton,
+                    !registered && { backgroundColor: Theme.colors.primary },
+                  ]}
+                  onPress={handleRegister}
+                  disabled={regLoading}
                 >
-                  {submittingComment ? (
-                    <ActivityIndicator size="small" color={Theme.colors.white} />
+                  {regLoading ? (
+                    <ActivityIndicator color={Theme.colors.white} />
                   ) : (
-                    <Text style={styles.submitCommentText}>Submit Review</Text>
+                    <>
+                      <AppIcon
+                        name={registered ? 'checkmark.circle.fill' : 'ticket.fill'}
+                        size={18}
+                        tintColor={Theme.colors.white}
+                      />
+                      <Text style={styles.registerButtonText}>
+                        {registered ? 'Registered' : 'Register Now'}
+                      </Text>
+                    </>
                   )}
                 </TouchableOpacity>
-              </GlassView>
-            ) : (
-              <GlassView style={styles.loginToCommentCard} intensity="low">
-                <Text style={styles.loginToCommentText}>
-                  Please sign in to write comments and reviews.
-                </Text>
-              </GlassView>
-            )}
 
-            {/* Comments List */}
-            <View style={styles.commentsList}>
-              {comments.length > 0 ? (
-                comments.map((item) => {
-                  const isOwner = currentUser?.id === item.user_id;
-                  const isEditing = editingCommentId === item.id;
+                <View style={styles.subActionsRow}>
+                  <TouchableOpacity style={styles.actionIconBtn} onPress={handleAddToCalendar}>
+                    <AppIcon name="calendar.badge.plus" size={20} tintColor={Theme.colors.text} />
+                    <Text style={styles.actionIconLabel}>Add Calendar</Text>
+                  </TouchableOpacity>
 
-                  return (
-                    <GlassView key={item.id} style={styles.commentItem} intensity="low">
-                      <View style={styles.commentHeader}>
-                        <View>
-                          <Text style={styles.commentUserName}>
-                            {item.users?.name || 'Anonymous User'}
-                          </Text>
-                          <Text style={styles.commentDate}>
-                            {new Date(item.created_at).toLocaleDateString()}
-                          </Text>
-                        </View>
+                  <TouchableOpacity style={styles.actionIconBtn} onPress={handleShare}>
+                    <AppIcon name="square.and.arrow.up" size={20} tintColor={Theme.colors.text} />
+                    <Text style={styles.actionIconLabel}>Share Event</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-                        {/* Stars */}
-                        <View style={styles.starsRow}>
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <AppIcon
-                              key={star}
-                              name={
-                                star <= (isEditing ? editingRating : item.rating)
-                                  ? 'star.fill'
-                                  : 'star'
+              {/* Map Preview Widget */}
+              <View style={{ marginBottom: Theme.spacing.lg }}>
+                <Text style={styles.sectionTitle}>📍 Venue Route Map</Text>
+                <GlassView style={{ height: 200, borderRadius: Theme.borderRadius.md, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(15, 23, 42, 0.08)' }} intensity="low">
+                  {Platform.OS === 'web' ? (
+                    <iframe
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(event.venue)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                    />
+                  ) : (
+                    <Image
+                      source={{ uri: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=600' }}
+                      style={{ width: '100%', height: '100%' }}
+                      contentFit="cover"
+                    />
+                  )}
+                </GlassView>
+              </View>
+            </View>
+
+            {/* Right Column: About, Songs Player, and Comments */}
+            <View style={Platform.OS === 'web' ? { flex: 1.3, minWidth: 400 } : undefined}>
+              {/* Description Section */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>About The Event</Text>
+                <Text style={styles.descriptionText}>{event.description}</Text>
+              </View>
+
+              {/* Featured Event Songs & Audio Playlist */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>🎵 Featured Event Songs & Live Playlist</Text>
+                <GlassView style={{ padding: Theme.spacing.md, borderRadius: Theme.borderRadius.md, backgroundColor: 'rgba(15, 23, 42, 0.04)', borderWidth: 1, borderColor: 'rgba(124, 58, 237, 0.15)' }} intensity="high">
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <Text style={{ fontSize: 10, fontFamily: Theme.fonts.bold, color: Theme.colors.primary, letterSpacing: 0.5 }}>NOW PLAYING STREAMING</Text>
+                      <Text style={{ fontSize: 14, fontFamily: Theme.fonts.bold, color: Theme.colors.text, marginTop: 2 }}>{currentTrackTitle}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' }}
+                      onPress={() => {
+                        const activeTrack = [
+                          { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+                          { title: 'Headliner Live Stage Anthem - DJ Alok', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+                          { title: 'Acoustic Sunset Vocal Live (VIP Cut)', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+                          { title: 'Cyber Symphony EDM Remix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' }
+                        ].find(t => t.title === currentTrackTitle) || { title: `${event.title} Official Theme Song`, url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' };
+
+                        if (Platform.OS === 'web') {
+                          try {
+                            if (audioInstance) {
+                              if (isPlayingTrack) {
+                                audioInstance.pause();
+                                setIsPlayingTrack(false);
+                              } else {
+                                audioInstance.play().catch((e: any) => console.log(e));
+                                setIsPlayingTrack(true);
                               }
-                              size={14}
-                              tintColor={
-                                star <= (isEditing ? editingRating : item.rating)
-                                  ? Theme.colors.warning
-                                  : Theme.colors.textMuted
-                              }
-                              style={{ marginRight: 2 }}
-                            />
-                          ))}
-                        </View>
-                      </View>
+                            } else {
+                              const newAudio = new (window as any).Audio(activeTrack.url);
+                              newAudio.play().catch((e: any) => console.log(e));
+                              setAudioInstance(newAudio);
+                              setCurrentTrackTitle(activeTrack.title);
+                              setIsPlayingTrack(true);
+                            }
+                          } catch (e) {
+                            setIsPlayingTrack(!isPlayingTrack);
+                          }
+                        } else {
+                          setIsPlayingTrack(!isPlayingTrack);
+                        }
+                      }}
+                    >
+                      <AppIcon name={isPlayingTrack ? 'pause.fill' : 'play.fill'} size={20} tintColor="#FFFFFF" />
+                    </TouchableOpacity>
+                  </View>
 
-                      {/* Comment body */}
-                      {isEditing ? (
-                        <View style={styles.editCommentWrapper}>
-                          {/* Rating select for edit */}
-                          <View style={styles.ratingSelectRowSmall}>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <TouchableOpacity key={star} onPress={() => setEditingRating(star)}>
-                                <AppIcon
-                                  name={star <= editingRating ? 'star.fill' : 'star'}
-                                  size={18}
-                                  tintColor={star <= editingRating ? Theme.colors.warning : Theme.colors.textMuted}
-                                />
-                              </TouchableOpacity>
-                            ))}
-                          </View>
-                          <TextInput
-                            style={styles.commentEditInput}
-                            value={editingText}
-                            onChangeText={setEditingText}
-                            multiline
+                  {/* Sample Track List */}
+                  <View style={{ gap: 8 }}>
+                    {[
+                      { title: `${event.title} Official Theme Song`, duration: '3:45', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+                      { title: 'Headliner Live Stage Anthem - DJ Alok', duration: '4:12', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+                      { title: 'Acoustic Sunset Vocal Live (VIP Cut)', duration: '3:50', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+                      { title: 'Cyber Symphony EDM Remix', duration: '5:05', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+                    ].map((track, idx) => (
+                      <TouchableOpacity
+                        key={idx}
+                        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: currentTrackTitle === track.title ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.5)', borderRadius: 8, borderWidth: 1, borderColor: currentTrackTitle === track.title ? Theme.colors.primary : 'rgba(15, 23, 42, 0.05)' }}
+                        onPress={() => {
+                          if (Platform.OS === 'web') {
+                            try {
+                              if (audioInstance) {
+                                audioInstance.pause();
+                              }
+                              const newAudio = new (window as any).Audio(track.url);
+                              newAudio.play().catch((e: any) => console.log(e));
+                              setAudioInstance(newAudio);
+                              setCurrentTrackTitle(track.title);
+                              setIsPlayingTrack(true);
+                            } catch (e) {
+                              setCurrentTrackTitle(track.title);
+                              setIsPlayingTrack(true);
+                            }
+                          } else {
+                            setCurrentTrackTitle(track.title);
+                            setIsPlayingTrack(true);
+                          }
+                        }}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <AppIcon name="music.note" size={14} tintColor={Theme.colors.primary} />
+                          <Text style={{ fontSize: 12, fontFamily: Theme.fonts.bold, color: Theme.colors.text }}>{track.title}</Text>
+                        </View>
+                        <Text style={{ fontSize: 11, color: Theme.colors.textMuted, fontFamily: Theme.fonts.medium }}>{track.duration}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </GlassView>
+              </View>
+
+              {/* Comments/Reviews Section */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Comments & Reviews</Text>
+
+                {/* Comment Form */}
+                {currentUser ? (
+                  <GlassView style={styles.commentFormCard} intensity="low">
+                    <Text style={styles.commentFormHeading}>Write a Review</Text>
+                    
+                    {/* Rating selection */}
+                    <View style={styles.ratingSelectRow}>
+                      <Text style={styles.ratingSelectLabel}>Your Rating: </Text>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <TouchableOpacity key={star} onPress={() => setRating(star)}>
+                          <AppIcon
+                            name={star <= rating ? 'star.fill' : 'star'}
+                            size={24}
+                            tintColor={star <= rating ? Theme.colors.warning : Theme.colors.textMuted}
                           />
-                          <View style={styles.editActionsRow}>
-                            <TouchableOpacity
-                              style={[styles.editBtnSave, { backgroundColor: Theme.colors.primary }]}
-                              onPress={() => saveEditComment(item.id)}
-                            >
-                              <Text style={styles.editBtnText}>Save</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.editBtnCancel} onPress={cancelEditComment}>
-                              <Text style={styles.editBtnText}>Cancel</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      ) : (
-                        <Text style={styles.commentContent}>{item.comment}</Text>
-                      )}
+                        </TouchableOpacity>
+                      ))}
+                    </View>
 
-                      {/* Actions for owner */}
-                      {isOwner && !isEditing && (
-                        <View style={styles.commentActions}>
-                          <TouchableOpacity onPress={() => startEditComment(item)}>
-                            <Text style={styles.actionText}>Edit</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity onPress={() => deleteComment(item.id)}>
-                            <Text style={[styles.actionText, { color: Theme.colors.danger }]}>
-                              Delete
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
+                    {/* Comment Text Input */}
+                    <TextInput
+                      style={styles.commentInput}
+                      placeholder="Share your thoughts about this event..."
+                      placeholderTextColor={Theme.colors.textMuted}
+                      value={newCommentText}
+                      onChangeText={setNewCommentText}
+                      multiline
+                      numberOfLines={3}
+                      maxLength={500}
+                    />
+
+                    <TouchableOpacity
+                      style={[styles.submitCommentBtn, { backgroundColor: Theme.colors.primary }]}
+                      onPress={submitComment}
+                      disabled={submittingComment}
+                    >
+                      {submittingComment ? (
+                        <ActivityIndicator size="small" color={Theme.colors.white} />
+                      ) : (
+                        <Text style={styles.submitCommentText}>Submit Review</Text>
                       )}
-                    </GlassView>
-                  );
-                })
-              ) : (
-                <Text style={styles.noCommentsText}>No reviews yet. Be the first to add one!</Text>
-              )}
+                    </TouchableOpacity>
+                  </GlassView>
+                ) : (
+                  <GlassView style={styles.loginToCommentCard} intensity="low">
+                    <Text style={styles.loginToCommentText}>
+                      Please sign in to write comments and reviews.
+                    </Text>
+                  </GlassView>
+                )}
+
+                {/* Comments List */}
+                <View style={styles.commentsList}>
+                  {comments.length > 0 ? (
+                    comments.map((item) => {
+                      const isOwner = currentUser?.id === item.user_id;
+                      const isEditing = editingCommentId === item.id;
+
+                      return (
+                        <GlassView key={item.id} style={styles.commentItem} intensity="low">
+                          <View style={styles.commentHeader}>
+                            <View>
+                              <Text style={styles.commentUserName}>
+                                {item.users?.name || 'Anonymous User'}
+                              </Text>
+                              <Text style={styles.commentDate}>
+                                {new Date(item.created_at).toLocaleDateString()}
+                              </Text>
+                            </View>
+
+                            {/* Stars */}
+                            <View style={styles.starsRow}>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <AppIcon
+                                  key={star}
+                                  name={
+                                    star <= (isEditing ? editingRating : item.rating)
+                                      ? 'star.fill'
+                                      : 'star'
+                                  }
+                                  size={14}
+                                  tintColor={
+                                    star <= (isEditing ? editingRating : item.rating)
+                                      ? Theme.colors.warning
+                                      : Theme.colors.textMuted
+                                  }
+                                  style={{ marginRight: 2 }}
+                                />
+                              ))}
+                            </View>
+                          </View>
+
+                          {isEditing ? (
+                            <View style={styles.editCommentWrapper}>
+                              <View style={styles.ratingSelectRowSmall}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <TouchableOpacity key={star} onPress={() => setEditingRating(star)}>
+                                    <AppIcon
+                                      name={star <= editingRating ? 'star.fill' : 'star'}
+                                      size={18}
+                                      tintColor={star <= editingRating ? Theme.colors.warning : Theme.colors.textMuted}
+                                    />
+                                  </TouchableOpacity>
+                                ))}
+                              </View>
+                              <TextInput
+                                style={styles.commentEditInput}
+                                value={editingText}
+                                onChangeText={setEditingText}
+                                multiline
+                              />
+                              <View style={styles.editActionsRow}>
+                                <TouchableOpacity
+                                  style={styles.editBtnCancel}
+                                  onPress={() => setEditingCommentId(null)}
+                                >
+                                  <Text style={[styles.editBtnText, { color: Theme.colors.text }]}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  style={[styles.editBtnSave, { backgroundColor: Theme.colors.primary }]}
+                                  onPress={() => saveEditComment(item.id)}
+                                >
+                                  <Text style={styles.editBtnText}>Save</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : (
+                            <Text style={styles.commentContent}>{item.comment}</Text>
+                          )}
+
+                          {isOwner && !isEditing && (
+                            <View style={styles.commentActions}>
+                              <TouchableOpacity onPress={() => startEditComment(item)}>
+                                <Text style={styles.actionText}>Edit</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => deleteComment(item.id)}>
+                                <Text style={[styles.actionText, { color: Theme.colors.danger }]}>
+                                  Delete
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          )}
+                        </GlassView>
+                      );
+                    })
+                  ) : (
+                    <Text style={styles.noCommentsText}>No reviews yet. Be the first to add one!</Text>
+                  )}
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -631,7 +723,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background,
     ...Platform.select({
       web: {
-        maxWidth: 800,
+        maxWidth: 1400,
         alignSelf: 'center',
         width: '100%',
         borderColor: 'rgba(15, 23, 42, 0.08)',
