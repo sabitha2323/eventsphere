@@ -20,6 +20,7 @@ export default function RegistrationCongratsScreen() {
   const regId = (params.regId as string) || `REG-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
   const total = (params.total as string) || '1499';
   const method = (params.method as string) || 'Razorpay Pro Gateway';
+  const seatNo = (params.seatNo as string) || '';
 
   return (
     <View style={styles.container}>
@@ -60,6 +61,13 @@ export default function RegistrationCongratsScreen() {
             <Text style={styles.label}>Payment Method</Text>
             <Text style={styles.value}>{method}</Text>
           </View>
+
+          {seatNo ? (
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Assigned Seat</Text>
+              <Text style={[styles.value, { color: '#F59E0B', fontWeight: 'bold' }]}>{seatNo}</Text>
+            </View>
+          ) : null}
 
           <View style={[styles.detailRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total Paid</Text>

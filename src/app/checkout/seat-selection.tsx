@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Theme } from '@/constants/theme';
 import { GlassView } from '@/components/GlassView';
 import { AppIcon } from '@/components/AppIcon';
+import { supabase } from '@/lib/supabase';
 
 interface Seat {
   id: string;
@@ -26,10 +27,36 @@ export default function StageSeatPickerScreen() {
 
   const eventTitle = (params.eventTitle as string) || 'Neon Beats Music Festival';
 
-  // Seed list of booked/occupied seats for realism
-  const bookedSeats = [
+  // Seed list of booked/occupied seats for realism (as state)
+  const [bookedSeatsList, setBookedSeatsList] = useState<string[]>([
     'A-03', 'A-05', 'B-04', 'C-02', 'C-07', 'D-05', 'E-03', 'E-09', 'F-06', 'F-11'
-  ];
+  ]);
+
+  // Load dynamically booked seats from mock/live database
+  useEffect(() => {
+    const fetchBookedSeats = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('registrations')
+          .select('seat_no');
+        
+        if (data) {
+          const loadedSeats = data
+            .map((r: any) => r.seat_no)
+            .filter((s: any) => !!s);
+            
+          setBookedSeatsList(prev => {
+            const merged = [...new Set([...prev, ...loadedSeats])];
+            return merged;
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching booked seats:', err);
+      }
+    };
+    
+    fetchBookedSeats();
+  }, []);
 
   // Grid Configuration
   const rows = [
@@ -46,7 +73,7 @@ export default function StageSeatPickerScreen() {
   const [selectedTierName, setSelectedTierName] = useState('Front Stage VIP Lounge');
 
   const handleSelectSeat = (seatId: string, type: string, price: number) => {
-    if (bookedSeats.includes(seatId)) return; // Don't allow booking occupied seats
+    if (bookedSeatsList.includes(seatId)) return; // Don't allow booking occupied seats
 
     setSelectedSeatNo(seatId);
     setSelectedPrice(price);
@@ -62,7 +89,7 @@ export default function StageSeatPickerScreen() {
     if (selectedSeatNo === seatId) {
       return '#8B5CF6'; // Selected: Violet
     }
-    if (bookedSeats.includes(seatId)) {
+    if (bookedSeatsList.includes(seatId)) {
       return '#EF4444'; // Booked/Occupied: Red
     }
     // Color code based on tier
@@ -141,7 +168,7 @@ export default function StageSeatPickerScreen() {
                   {/* Row Seats list */}
                   <View style={styles.rowSeats}>
                     {seatArray.map((seatId) => {
-                      const isBooked = bookedSeats.includes(seatId);
+                      const isBooked = bookedSeatsList.includes(seatId);
                       const isSelected = selectedSeatNo === seatId;
                       const seatColor = getSeatColor(seatId, row.type as any);
 

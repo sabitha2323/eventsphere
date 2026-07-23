@@ -14,6 +14,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Theme } from '@/constants/theme';
 import { GlassView } from '@/components/GlassView';
 import { AppIcon } from '@/components/AppIcon';
+import { supabase } from '@/lib/supabase';
 
 export default function RazorpayCheckoutScreen() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function RazorpayCheckoutScreen() {
   const eventTitle = (params.eventTitle as string) || 'Neon Beats Music Festival';
   const price = parseFloat((params.price as string) || '1499');
   const quantity = parseInt((params.quantity as string) || '1', 10);
+  const seatNo = (params.seatNo as string) || '';
 
   const subtotal = price * quantity;
   const convenienceFee = 50;
@@ -37,11 +39,32 @@ export default function RazorpayCheckoutScreen() {
 
   const [processing, setProcessing] = useState(false);
 
-  const handleProcessPayment = () => {
+  const handleProcessPayment = async () => {
     setProcessing(true);
-    setTimeout(() => {
+    
+    try {
       const razorpayPaymentId = `pay_Rzp${Math.random().toString(36).substring(2, 12).toUpperCase()}`;
       const regId = `REG-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Register registration with seat no
+        await supabase.from('registrations').insert({
+          id: regId,
+          event_id: 'event-uuid-music-1', // Default Seed event ID for seat selector
+          user_id: user.id,
+          seat_no: seatNo,
+        });
+
+        // Insert billing record
+        await supabase.from('billing_records').insert({
+          user_id: user.id,
+          ticket_id: regId,
+          amount: totalAmount,
+          payment_method: `Razorpay - ${paymentMode}`,
+        });
+      }
+
       setProcessing(false);
 
       router.replace({
@@ -52,9 +75,13 @@ export default function RazorpayCheckoutScreen() {
           total: totalAmount,
           method: 'Razorpay Pro Gateway',
           paymentId: razorpayPaymentId,
+          seatNo: seatNo,
         }
       } as any);
-    }, 1200);
+    } catch (e: any) {
+      setProcessing(false);
+      Alert.alert('Payment Error', e.message || 'An error occurred while processing payment');
+    }
   };
 
   return (
